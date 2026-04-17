@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bqhtxrn1r54m3"]
+
+[ext_resource type="Script" uid="uid://kme3xvun4gc4" path="res://puzzle-framework/puzzle_framework.gd" id="1_57jsw"]
+
+[node name="PuzzleFramework" type="Node" unique_id=835186744]
+script = ExtResource("1_57jsw")
+game_name = "Direction Digger"
+game_version = "1.5.5"
+game_tagline = "Teaches Directions, Collaboration & Problem Solving"
+menu_pattern_enabled = true

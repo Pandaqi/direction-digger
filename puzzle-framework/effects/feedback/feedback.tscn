@@ -1,0 +1,133 @@
+[gd_scene format=3 uid="uid://c16xnc3j2nps7"]
+
+[ext_resource type="Script" uid="uid://dowhinqerktca" path="res://puzzle-framework/effects/feedback/feedback.gd" id="1_mvgnt"]
+[ext_resource type="Texture2D" uid="uid://io301w4dci3p" path="res://icon.svg" id="2_c2e4g"]
+
+[sub_resource type="Animation" id="Animation_bkdw6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Container:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Container:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_v60l5"]
+resource_name = "feedback_disappear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.96666664),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Container:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.22, 0.86, 0.93, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.2, 1.2), Vector2(1, 1), Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1e-05, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Container:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.65, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bkdw6"]
+_data = {
+&"RESET": SubResource("Animation_bkdw6"),
+&"feedback_disappear": SubResource("Animation_v60l5")
+}
+
+[node name="Feedback" type="Node2D" unique_id=147610918 node_paths=PackedStringArray("container", "sprite", "label", "anim_player")]
+script = ExtResource("1_mvgnt")
+container = NodePath("Container")
+sprite = NodePath("Container/Sprite2D")
+label = NodePath("Container/Label")
+anim_player = NodePath("AnimationPlayer")
+
+[node name="Container" type="Node2D" parent="." unique_id=372156240]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Sprite2D" type="Sprite2D" parent="Container" unique_id=1980524792]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_c2e4g")
+
+[node name="Label" type="RichTextLabel" parent="Container" unique_id=989725137]
+offset_left = -85.0
+offset_top = -58.0
+offset_right = 87.0
+offset_bottom = 55.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/normal_font_size = 32
+text = "Lala"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1049612028]
+libraries/ = SubResource("AnimationLibrary_bkdw6")
