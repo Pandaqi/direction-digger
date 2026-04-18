@@ -2,6 +2,8 @@ extends PuzzleCommand
 class_name CommandArrow
 
 var arrow : ArrowData
+var cells_targeted : Array[CellData] = []
+var cells_targeted_by_machine : Dictionary[MachineData, CellData] = {}
 
 func _init(a:ArrowData):
 	arrow = a
@@ -9,8 +11,12 @@ func _init(a:ArrowData):
 
 func do(cmds:PuzzleCommands) -> bool:
 	arrow.change_times_used(+1)
+	cells_targeted = []
 	for cmd in get_commands():
 		if not cmd.is_valid(): continue
+		var target_cell := cmd.get_target_cell()
+		cells_targeted.append(target_cell)
+		cells_targeted_by_machine[cmd.machine] = target_cell
 		await cmds.execute_command(cmd)
 	return true
 

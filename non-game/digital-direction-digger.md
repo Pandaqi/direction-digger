@@ -2,17 +2,32 @@
 
 ## To-Do
 
-* Save the cells influenced/visited by a `CommandArrow` inside the command. Makes it easy to know "on THIS TURN, THESE CELLS were visited" (for placing proper terrain types)
-* Already place gold as we go.
-  * Merely place another gold on our _final square_.
-  * (If we have more than 1 machine, this is only necessary if we _moved this machine since its last gold collection_.)
-* Allow playing with arrow keys / WASD too.
-* SETTING: Add numbers to gold; must collect in order.
-  * I can just add the number from the puzzle generation.
-  * But now I also need to check if it should actually grab the treasure, by knowing if the LAST treasure grabbed was the previous number.
-    * Maybe it's better to do this PER MACHINE. So I can save the `last_treasure_number` into the `MachineData` and access that in the command.
+Implement special cells/rules:
 
+* Stone
+* Spider Web
+* Arrow Treasure
+* Ice & Lava
+* Energy Magic
 
+Create visuals:
+
+* Several unique diggers in unique colors. (Or ONE digger that's tintable.)
+* Terrain Types
+* Nice background
+* (Find Matching Fonts??)
+
+Other stuff (if I get stuck with things above):
+
+* Tweaks:
+  * Allow marking treasure as "required" or "optional". If we have too much treasure at the end, we can remove some optional ones.
+  * "Control" over how loose to be with arrows enabled/numbers
+  * "Control" over min/max number of turns expected based on map size and machine count
+* Sound Effects: Digging, Collect Treasure, Blocked, Unique stuff for terrain types
+* Animations: Fake move to new cell, Digging particles, Unique stuff for terrain types
+* Tutorial: Audio Narration + Pointer + Images
+* Difficulty Levels (can't really do them until I know all my generation rules though) + Settings
+* Favicon
 
 
 

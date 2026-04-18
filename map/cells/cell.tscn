@@ -4,10 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_glfqj"]
 [ext_resource type="PackedScene" uid="uid://d23x83jafdix7" path="res://map/machines/machine.tscn" id="3_n6jdi"]
 
-[node name="Cell" type="Node2D" unique_id=31184171 node_paths=PackedStringArray("sprite_terrain", "sprite_treasure", "machine")]
+[node name="Cell" type="Node2D" unique_id=31184171 node_paths=PackedStringArray("sprite_terrain", "sprite_treasure", "label_treasure", "machine")]
 script = ExtResource("1_kshm1")
 sprite_terrain = NodePath("SpriteTerrain")
 sprite_treasure = NodePath("SpriteTreasure")
+label_treasure = NodePath("SpriteTreasure/Label")
 machine = NodePath("Machine")
 
 [node name="SpriteTerrain" type="Sprite2D" parent="." unique_id=1156782613]
@@ -18,3 +19,16 @@ texture = ExtResource("2_glfqj")
 [node name="SpriteTreasure" type="Sprite2D" parent="." unique_id=683749435]
 modulate = Color(0.67769384, 0.6776932, 1.1551381e-06, 1)
 texture = ExtResource("2_glfqj")
+
+[node name="Label" type="Label" parent="SpriteTreasure" unique_id=121099041]
+offset_left = -62.0
+offset_top = -63.0
+offset_right = 64.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 92
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1

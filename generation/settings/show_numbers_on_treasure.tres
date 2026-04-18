@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://bj7pb1bv8oyn1"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_li2qk"]
+
+[resource]
+script = ExtResource("1_li2qk")
+key = "show_numbers_on_treasure"
+label = "Show Numbers On Treasure"
+default = false
+tooltip = "Every machine must collect treasure in order (1,2,etc)."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://dtvi5u4qg5lq5"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_ux15n"]
+
+[resource]
+script = ExtResource("1_ux15n")
+key = "enable_keyboard_shortcuts"
+label = "Enable Keyboard Shortcuts"
+default = true
+tooltip = "Arrow keys move machine 1, WASD keys move machine 2 (if it exists)."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

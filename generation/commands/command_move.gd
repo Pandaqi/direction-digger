@@ -15,7 +15,9 @@ func do(cmds:PuzzleCommands) -> bool:
 	cur_cell.remove_machine(machine)
 	new_cell.add_machine(machine)
 	
-	if new_cell.has_treasure():
+	var should_collect := new_cell.has_treasure() and (not cmds.generating)
+	var can_collect : bool = (not PuzzleSettings.get_value("show_numbers_on_treasure")) or (new_cell.treasure_number == (machine.get_last_treasure_number() + 1))
+	if should_collect and can_collect:
 		await cmds.execute_command(CommandTreasure.new(new_cell))
 	
 	return true

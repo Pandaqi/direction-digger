@@ -41,19 +41,12 @@ func visualize(gen:PuzzleGenerator) -> void:
 	set_turn(0)
 	PuzzleFramework.start_puzzle()
 
-func count_treasure() -> int:
-	var sum := 0
-	for cell in cells:
-		if cell.data.has_treasure():
-			sum += 1
-	return sum
-
 func refresh_turn() -> void:
 	set_turn(commands.count())
 
 func set_turn(t:int) -> void:
 	var max_turns := generator.solution.size() - 1
-	var all_treasure_grabbed := count_treasure() <= 0
+	var all_treasure_grabbed := generator.count_treasure() <= 0
 	var is_game_over := t > max_turns or all_treasure_grabbed
 	if is_game_over:
 		PuzzleFramework.finish_puzzle(all_treasure_grabbed)
@@ -99,11 +92,41 @@ func place_arrow(idx:int, loc:PuzzleGrid.Direction, ad:ArrowData) -> void:
 	arrow.clicked.connect(_on_arrow_clicked, CONNECT_APPEND_SOURCE_OBJECT)
 
 func _on_arrow_clicked(a:Arrow) -> void:
+	execute_arrow(a.data)
+
+func execute_arrow(ad:ArrowData) -> void:
 	if commands.is_busy(): return
 	
-	var cmd := CommandArrow.new(a.data)
+	var cmd := CommandArrow.new(ad)
 	if not cmd.is_valid():
 		print("Invalid Turn!") # @TODO: give more feedback about this?
 		return
 	
 	await commands.execute_command(cmd)
+
+func _input(ev:InputEvent) -> void:
+	check_for_hotkeys(ev)
+
+func check_for_hotkeys(ev:InputEvent) -> void:
+	if not PuzzleSettings.get_value("enable_keyboard_shortcuts"): return
+	if generator.count_machines() > 1: return
+	
+	var keys : Array[String] = ["", "_alt"]
+	var arrow : ArrowData = null
+	for i in range(2):
+		if i >= generator.machines.size(): break
+
+		var arrows_relevant := generator.get_all_arrows_acting_on(generator.machines[i])
+		var key_ext := keys[i]
+		if ev.is_action_released("ui_left" + key_ext):
+			arrow = arrows_relevant[2]
+		if ev.is_action_released("ui_right" + key_ext):
+			arrow = arrows_relevant[3]
+		if ev.is_action_released("ui_up" + key_ext):
+			arrow = arrows_relevant[0]
+		if ev.is_action_released("ui_down" + key_ext):
+			arrow = arrows_relevant[1]
+	
+	if not arrow: return
+	
+	execute_arrow(arrow)

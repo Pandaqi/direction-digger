@@ -3,6 +3,7 @@ class_name CellData
 
 var machines : Array[MachineData] = []
 var treasure := false
+var treasure_number := -1
 var type : TerrainType
 
 var is_machine_starting_pos := false
@@ -39,12 +40,17 @@ func remove_machine(m:MachineData) -> void:
 	m.set_cell(null)
 	changed.emit()
 
-func add_treasure() -> void:
+func can_place_treasure() -> bool:
+	return (not has_treasure()) and (not is_machine_starting_pos)
+
+func add_treasure(num:int) -> void:
 	treasure = true
+	treasure_number = num
 	changed.emit()
 
 func remove_treasure() -> void:
 	treasure = false
+	treasure_number = -1
 	changed.emit()
 
 func has_treasure() -> bool:

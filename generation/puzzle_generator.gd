@@ -10,6 +10,7 @@ var arrow_max_times_used := 1
 var remove_all_unused_arrows := true
 var arrow_point_anywhere := true
 
+var treasure_probability := 0.33
 var num_machines : int = PuzzleSettings.get_value("number_of_diggers")
 
 var grid : PuzzleGrid
@@ -42,11 +43,13 @@ func create_grid() -> void:
 	grid.create(grid_size)
 	
 	# create all the arrows
+	arrows = []
+	arrows_by_location = {}
+	
 	var directions := PuzzleGrid.get_orthogonal_directions()
 	for dir in directions:
 		arrows_by_location[dir] = []
 	
-	# @TODO: in the future we might allow arrows to point in ANY direction, but by default I'll just let them point into the map for now
 	for x in range(grid_size.x):
 		var arrow_top := ArrowData.new(x, PuzzleGrid.Direction.UP, self)
 		add_arrow(arrow_top)
@@ -60,6 +63,7 @@ func create_grid() -> void:
 		add_arrow(arrow_right)
 	
 	# create all the machines
+	machines = []
 	for i in range(num_machines):
 		machines.append(MachineData.new(i))
 
@@ -85,11 +89,14 @@ func count_arrows() -> int:
 func count_machines() -> int:
 	return machines.size()
 
+func get_num_turns_bounds() -> Vector2i:
+	return num_turns_bounds * num_machines
+
 func take_turns() -> void:
-	var num_turns_per_machine := randi_range(num_turns_bounds.x, num_turns_bounds.y)
-	var num_turns := num_turns_per_machine * num_machines
+	var turns_bounds := get_num_turns_bounds()
+	var num_turns := randi_range(turns_bounds.x, turns_bounds.y) 
 	
-	var turns_between_machine_add_bounds := Vector2i(0, num_turns_per_machine - 1)
+	var turns_between_machine_add_bounds := Vector2i(0, floori(num_turns / float(machines.size())) - 1)
 
 	# place first machine; the others are added as we go
 	# (we stagger this to _ensure_ machines have interplay, at least on the first turn they move)
@@ -119,18 +126,31 @@ func take_turns() -> void:
 		# adding that machine might have made the turn invalid, so check
 		if not turn_picked.is_valid(): continue
 		
+		# do the actual turn
 		commands.execute_command(turn_picked)
+		
+		# place treasure where machines ended up (if we CAN and SHOULD)
+		for machine in turn_picked.cells_targeted_by_machine:
+			var cell := turn_picked.cells_targeted_by_machine[machine]
+			var should_place_treasure := randf() <= treasure_probability
+			if cell.can_place_treasure() and should_place_treasure:
+				var new_treasure_num := machine.get_last_treasure_number() + 1
+				cell.add_treasure(new_treasure_num)
+				machine.set_last_treasure_number(new_treasure_num)
 	
-	# now place gold on the paths that machines took
-	# (we always place one on our FINAL square, otherwise the last bit of path is meaningless)
+	# now always place one on our FINAL square, 
+	# (otherwise the last bit of path is meaningless)
+	# (in rare cases the algorithm terminates before placing all machines, which is always a failure case and we should immediately quit if so)
+	var is_invalid := false
 	for machine in machines:
-		var path := machine.path
-		var next_gold := path.size() - 1
-		for i in range(path.size() -1, -1, -1):
-			if i > next_gold: continue
-			if path[i].is_machine_starting_pos: continue
-			path[i].add_treasure()
-			next_gold = i - randi_range(2,4)
+		var last_cell := machine.cell
+		if not last_cell: 
+			is_invalid = true
+			break
+		if not last_cell.can_place_treasure(): continue
+		last_cell.add_treasure(machine.get_last_treasure_number() + 1)
+	
+	if is_invalid: return
 	
 	# now place special blocks around the paths that machines took
 	# @TODO
@@ -150,19 +170,24 @@ func place_new_machine(arrow:ArrowData, machine_index:int) -> bool:
 	rand_cell.add_machine(machines[machine_index])
 	return true
 
+func get_all_arrows_acting_on(machine:MachineData) -> Array[ArrowData]:
+	var pos := machine.cell.pos
+	var indices : Array[int] = [pos.x, pos.x, pos.y, pos.y]
+	var directions : Array[PuzzleGrid.Direction] = [PuzzleGrid.Direction.UP, PuzzleGrid.Direction.DOWN, PuzzleGrid.Direction.LEFT, PuzzleGrid.Direction.RIGHT]
+	var arr : Array[ArrowData] = []
+	for i in range(indices.size()):
+		arr.append(get_arrow(indices[i], directions[i]))
+	return arr
+
 func get_all_valid_turns() -> Array[CommandArrow]:
 	var all_turns : Array[CommandArrow] = []
 	
 	# get all possible moves
 	for machine in machines:
 		if not machine.has_been_placed(): continue
-		
-		var pos := machine.cell.pos
-		var indices = [pos.x, pos.x, pos.y, pos.y]
-		var directions = [PuzzleGrid.Direction.UP, PuzzleGrid.Direction.DOWN, PuzzleGrid.Direction.LEFT, PuzzleGrid.Direction.RIGHT]
-		
-		for i in range(indices.size()):
-			var cmd := CommandArrow.new(get_arrow(indices[i], directions[i]))
+		var arrows_relevant := get_all_arrows_acting_on(machine) 
+		for arrow in arrows_relevant:
+			var cmd := CommandArrow.new(arrow)
 			if not cmd.is_valid(): continue # ignore moves that would do nothing
 			all_turns.append(cmd)
 	
@@ -193,19 +218,42 @@ func get_all_valid_turns() -> Array[CommandArrow]:
 	
 	return valid_turns
 
+func count_treasure() -> int:
+	var sum := 0
+	for cell in grid.cells:
+		if cell.has_treasure():
+			sum += 1
+	return sum
+
 func clean_up(desperate := false) -> bool:
 	# crucial checks that must be fulfilled
 	var machines_unused := machines.filter(func(m:MachineData): return not m.has_been_placed())
-	if machines_unused.size() > 0: return false
+	if machines_unused.size() > 0: 
+		print("PuzzleGenerator | Attempt Discarded | Not all machines used")
+		return false
 	
-	# @TODO: more nice-to-have checks that can be loosened
+	# more nice-to-have checks that can be loosened
 	if not desperate:
-		pass
-	
+		var used_enough_turns := solution.size() >= get_num_turns_bounds().x
+		if not used_enough_turns: 
+			print("PuzzleGenerator | Attempt Discarded | Not enough turns")
+			return false
+		
+		var last_move_collects_gold : bool = solution.back().cells_targeted.filter(func(c:CellData): return c.has_treasure()).size() > 0
+		if not last_move_collects_gold: 
+			print("PuzzleGenerator | Attempt Discarded | Last move does not collect gold (and is thus likely pointless)")
+			return false
+		
+		var too_little_treasure : bool = count_treasure() < maxi(2, ceili(0.66*count_machines()))
+		if too_little_treasure: 
+			print("PuzzleGenerator | Attempt Discarded | Too little treasure placed")
+			return false
+
 	# put machines back where they started
 	for machine in machines:
 		machine.cell.remove_machine(machine)
 		machine.path.front().add_machine(machine)
+		machine.set_last_treasure_number(-1)
 	
 	# set arrow data based on their usage during generation
 	# @TODO: some setting for "randomizing" this, so SOME unneeded arrows are shown and SOME numbers are higher than strictly needed?
