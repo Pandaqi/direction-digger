@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PuzzleSettingSlider" format=3 uid="uid://b352mosl6gb0l"]
+
+[ext_resource type="Script" uid="uid://bveqd8k261myk" path="res://puzzle-framework/settings/setting_slider.gd" id="1_y4ln1"]
+
+[resource]
+script = ExtResource("1_y4ln1")
+min_value = 1.0
+max_value = 6.0
+key = "number_of_diggers"
+label = "Number of Players"
+default = 1
+tooltip = "How many digging machines to place into the puzzle."
+metadata/_custom_type_script = "uid://bveqd8k261myk"

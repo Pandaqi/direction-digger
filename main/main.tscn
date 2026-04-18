@@ -1,6 +1,32 @@
 [gd_scene format=3 uid="uid://gnji7ijcaxks"]
 
 [ext_resource type="Script" uid="uid://dw87ceqfh8smt" path="res://main/main.gd" id="1_53q0u"]
+[ext_resource type="Script" uid="uid://dohnv38btn8fu" path="res://map/puzzle_visualizer.gd" id="2_pjrb6"]
+[ext_resource type="PackedScene" uid="uid://bwjke4sr3kgdu" path="res://map/arrows/arrow.tscn" id="3_xwkvk"]
+[ext_resource type="PackedScene" uid="uid://b0vjshbm6qhen" path="res://map/cells/cell.tscn" id="4_3wy1v"]
+[ext_resource type="Script" uid="uid://haho73xq30yv" path="res://puzzle-framework/tools/camera.gd" id="4_c651c"]
+[ext_resource type="PackedScene" uid="uid://2xygcypttdo7" path="res://puzzle-framework/game/game_menu.tscn" id="6_4dugh"]
+[ext_resource type="PackedScene" uid="uid://q1jom8bphw8d" path="res://puzzle-framework/gameover/game_over_dialog.tscn" id="7_67ri8"]
 
-[node name="Main" type="Node2D" unique_id=1559668950]
+[node name="Main" type="Node2D" unique_id=1559668950 node_paths=PackedStringArray("vis", "cam")]
 script = ExtResource("1_53q0u")
+vis = NodePath("PuzzleVisualizer")
+cam = NodePath("PuzzleCamera")
+
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761]
+script = ExtResource("2_pjrb6")
+arrow_scene = ExtResource("3_xwkvk")
+cell_scene = ExtResource("4_3wy1v")
+
+[node name="PuzzleCamera" type="Camera2D" parent="." unique_id=280949759]
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("4_c651c")
+edge_margin = Vector2(32, 160)
+metadata/_custom_type_script = "uid://haho73xq30yv"
+
+[node name="GameMenu" parent="." unique_id=950523672 instance=ExtResource("6_4dugh")]
+allow_undo = true
+allow_hint = true
+
+[node name="GameOverDialog" parent="." unique_id=1270097331 instance=ExtResource("7_67ri8")]
+allow_undo = true

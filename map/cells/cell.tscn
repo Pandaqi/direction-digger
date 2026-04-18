@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://b0vjshbm6qhen"]
+
+[ext_resource type="Script" uid="uid://d2wsjwrrxx3wc" path="res://map/cells/cell.gd" id="1_kshm1"]
+[ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_glfqj"]
+[ext_resource type="PackedScene" uid="uid://d23x83jafdix7" path="res://map/machines/machine.tscn" id="3_n6jdi"]
+
+[node name="Cell" type="Node2D" unique_id=31184171 node_paths=PackedStringArray("sprite_terrain", "sprite_treasure", "machine")]
+script = ExtResource("1_kshm1")
+sprite_terrain = NodePath("SpriteTerrain")
+sprite_treasure = NodePath("SpriteTreasure")
+machine = NodePath("Machine")
+
+[node name="SpriteTerrain" type="Sprite2D" parent="." unique_id=1156782613]
+texture = ExtResource("2_glfqj")
+
+[node name="Machine" parent="." unique_id=378872610 instance=ExtResource("3_n6jdi")]
+
+[node name="SpriteTreasure" type="Sprite2D" parent="." unique_id=683749435]
+modulate = Color(0.67769384, 0.6776932, 1.1551381e-06, 1)
+texture = ExtResource("2_glfqj")

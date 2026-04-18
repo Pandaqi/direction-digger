@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c16xnc3j2nps7"]
 
 [ext_resource type="Script" uid="uid://dowhinqerktca" path="res://puzzle-framework/effects/feedback/feedback.gd" id="1_mvgnt"]
-[ext_resource type="Texture2D" uid="uid://io301w4dci3p" path="res://icon.svg" id="2_c2e4g"]
+[ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_c2e4g"]
 
 [sub_resource type="Animation" id="Animation_bkdw6"]
 length = 0.001

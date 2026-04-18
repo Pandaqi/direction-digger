@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://bqhtxrn1r54m3"]
 
 [ext_resource type="Script" uid="uid://kme3xvun4gc4" path="res://puzzle-framework/puzzle_framework.gd" id="1_57jsw"]
+[ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="2_3a4ji"]
+[ext_resource type="Resource" uid="uid://cduisti1i3nme" path="res://generation/difficulties/diff_easiest.tres" id="3_g61x5"]
+[ext_resource type="Script" uid="uid://xoy87uum5v5s" path="res://puzzle-framework/settings/setting.gd" id="4_uqhpv"]
+[ext_resource type="Resource" uid="uid://b352mosl6gb0l" path="res://generation/settings/number_of_diggers.tres" id="5_57jsw"]
 
 [node name="PuzzleFramework" type="Node" unique_id=835186744]
 script = ExtResource("1_57jsw")
@@ -8,3 +12,5 @@ game_name = "Direction Digger"
 game_version = "1.5.5"
 game_tagline = "Teaches Directions, Collaboration & Problem Solving"
 menu_pattern_enabled = true
+difficulties = Array[ExtResource("2_3a4ji")]([ExtResource("3_g61x5")])
+settings = Array[ExtResource("4_uqhpv")]([ExtResource("5_57jsw")])

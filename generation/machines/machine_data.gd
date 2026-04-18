@@ -4,6 +4,8 @@ var index : int
 var cell : CellData
 var path : Array[CellData]
 
+signal changed()
+
 func _init(idx:int) -> void:
 	index = idx
 	path = []
@@ -16,4 +18,4 @@ func set_cell(c:CellData) -> void:
 	if cell != null: path.append(cell)
 
 func has_been_placed() -> bool:
-	return cell != null
+	return path.size() > 0

@@ -1,22 +1,42 @@
 extends PuzzleCell
 class_name CellData
 
-var machine : MachineData = null
+var machines : Array[MachineData] = []
 var treasure := false
+var type : TerrainType
+
+var is_machine_starting_pos := false
+
+enum TerrainType
+{
+	NONE,
+	REGULAR
+}
+
+func get_terrain() -> TerrainType:
+	return type
+
+# @TODO: Actually set and use this in puzzle generation
+func set_terrain(tt:TerrainType) -> void:
+	type = tt
+	changed.emit()
 
 func has_machine() -> bool:
-	return machine != null
+	return machines.size() > 0
+
+func get_machine() -> MachineData:
+	return machines.front()
 
 func add_machine(m:MachineData) -> void:
-	if has_machine(): return
-	machine = m
-	machine.set_cell(self)
+	machines.append(m)
+	if m.path.size() <= 0: is_machine_starting_pos = true
+	m.set_cell(self)
 	changed.emit()
 
 func remove_machine(m:MachineData) -> void:
-	if not has_machine() or not machine == m: return
-	machine.set_cell(null)
-	machine = null
+	if not machines.has(m): return
+	machines.erase(m)
+	m.set_cell(null)
 	changed.emit()
 
 func add_treasure() -> void:
