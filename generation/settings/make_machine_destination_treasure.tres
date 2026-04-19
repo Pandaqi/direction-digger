@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://ckfgy73q4w2bs"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_2532a"]
+
+[resource]
+script = ExtResource("1_2532a")
+key = "make_machine_destination_treasure"
+label = "Mark Machine Destinations"
+default = false
+tooltip = "The final cell for a machine shows a treasure chest (makes puzzle much easier)."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

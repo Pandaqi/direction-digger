@@ -1,34 +1,43 @@
 [gd_scene format=3 uid="uid://b0vjshbm6qhen"]
 
 [ext_resource type="Script" uid="uid://d2wsjwrrxx3wc" path="res://map/cells/cell.gd" id="1_kshm1"]
-[ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_glfqj"]
+[ext_resource type="PackedScene" uid="uid://yvlk0xtxggca" path="res://map/cells/sprite_terrain.tscn" id="2_n6jdi"]
+[ext_resource type="Material" uid="uid://diyvhknr75s2s" path="res://map/cells/treasure_blend_material.tres" id="3_glfqj"]
 [ext_resource type="PackedScene" uid="uid://d23x83jafdix7" path="res://map/machines/machine.tscn" id="3_n6jdi"]
+[ext_resource type="PackedScene" uid="uid://invbag5uje1d" path="res://map/arrows/arrow_simplified.tscn" id="4_n6jdi"]
 
-[node name="Cell" type="Node2D" unique_id=31184171 node_paths=PackedStringArray("sprite_terrain", "sprite_treasure", "label_treasure", "machine")]
+[node name="Cell" type="Node2D" unique_id=31184171 node_paths=PackedStringArray("sprite_terrain", "sprite_treasure", "label_treasure", "machine", "arrows_container")]
 script = ExtResource("1_kshm1")
 sprite_terrain = NodePath("SpriteTerrain")
 sprite_treasure = NodePath("SpriteTreasure")
-label_treasure = NodePath("SpriteTreasure/Label")
+label_treasure = NodePath("Label")
 machine = NodePath("Machine")
+arrows_container = NodePath("ArrowsContainer")
+arrow_scene = ExtResource("4_n6jdi")
 
-[node name="SpriteTerrain" type="Sprite2D" parent="." unique_id=1156782613]
-texture = ExtResource("2_glfqj")
+[node name="SpriteTerrain" parent="." unique_id=1574625445 instance=ExtResource("2_n6jdi")]
+frame = 3
 
-[node name="Machine" parent="." unique_id=378872610 instance=ExtResource("3_n6jdi")]
+[node name="SpriteTreasure" parent="." unique_id=899907648 instance=ExtResource("2_n6jdi")]
+material = ExtResource("3_glfqj")
+frame = 10
 
-[node name="SpriteTreasure" type="Sprite2D" parent="." unique_id=683749435]
-modulate = Color(0.67769384, 0.6776932, 1.1551381e-06, 1)
-texture = ExtResource("2_glfqj")
-
-[node name="Label" type="Label" parent="SpriteTreasure" unique_id=121099041]
-offset_left = -62.0
-offset_top = -63.0
-offset_right = 64.0
-offset_bottom = 65.0
+[node name="Label" type="Label" parent="." unique_id=121099041]
+offset_left = -128.0
+offset_top = -130.04764
+offset_right = 130.0
+offset_bottom = 132.04764
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.64705884)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
+theme_override_constants/shadow_offset_x = 6
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 24
 theme_override_font_sizes/font_size = 92
 text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ArrowsContainer" type="Node2D" parent="." unique_id=428793239]
+
+[node name="Machine" parent="." unique_id=378872610 instance=ExtResource("3_n6jdi")]

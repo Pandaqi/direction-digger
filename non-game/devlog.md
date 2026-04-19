@@ -187,10 +187,12 @@ How do we add this to the algorithm? After creating the solution,
 * We select all **squares that have been visited multiple times**.
 * With some probability, we **turn them into this terrain** (and add treasure/gold if it doesn't have it already)
 * Set the **number** to **how many times the square was visited**.
+* (If all the visits were by the same machine, we can make this _selective_ too. So only _that_ machine can wear it down.)
 
 Now we know that the final machine to visit that space will finally break the type and get the gold.
 
-We can make more varied by randomizing that number. Maybe 3 machines visit this square, but we only give it the number 2 so that the _second_ machine picks up the gold.
+We can make it more varied by randomizing that number. Maybe 3 machines visit this square, but we only give it the number 2 so that the _second_ machine picks up the gold.
+
 
 
 ### Arrow Treasure
@@ -238,7 +240,7 @@ How do we add this to the algorithm? After creating the solution,
   * Because, if we reduce the turn count by 1 now ... then the player will not have enough _to actually get to us_. So the puzzle is not solvable anymore.
   * That's why we go back to front. As we place these squares, the turn count keeps dropping, and we need to make sure we're still able to reach these cells.
 
-This was definitely the most tricky one to implement. Minor mistakes here lead to completely unsolvable puzzles. I also decided to introduce this one last, because it requires a lot of counting and number knowledge, which players might not have.
+This was definitely the most tricky one to implement. Minor mistakes here lead to completely unsolvable puzzles (because you run out of turns halfway through). Even worse, some moves can move 2 or 3 machines at once, so you can earn _multiple moves_ back ... in one move. I also decided to introduce this one last, because it requires a lot of counting and number knowledge (which young players might not have) and only becomes interesting on big puzzles (with a lot of turns).
 
 
 

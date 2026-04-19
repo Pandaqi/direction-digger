@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TerrainStone" format=3 uid="uid://bq5ndib1hodvq"]
+
+[ext_resource type="Script" uid="uid://cd7e0sioatsl5" path="res://generation/terrains/terrain_stone.gd" id="1_oidpl"]
+
+[resource]
+script = ExtResource("1_oidpl")
+type = 3
+priority = 3
+metadata/_custom_type_script = "uid://cd7e0sioatsl5"

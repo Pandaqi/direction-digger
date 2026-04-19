@@ -6,12 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://b0vjshbm6qhen" path="res://map/cells/cell.tscn" id="4_3wy1v"]
 [ext_resource type="Script" uid="uid://haho73xq30yv" path="res://puzzle-framework/tools/camera.gd" id="4_c651c"]
 [ext_resource type="PackedScene" uid="uid://2xygcypttdo7" path="res://puzzle-framework/game/game_menu.tscn" id="6_4dugh"]
+[ext_resource type="Script" uid="uid://drjxhvpd62vyp" path="res://ui/ui.gd" id="6_67ri8"]
 [ext_resource type="PackedScene" uid="uid://q1jom8bphw8d" path="res://puzzle-framework/gameover/game_over_dialog.tscn" id="7_67ri8"]
 
-[node name="Main" type="Node2D" unique_id=1559668950 node_paths=PackedStringArray("vis", "cam")]
+[node name="Main" type="Node2D" unique_id=1559668950 node_paths=PackedStringArray("vis", "cam", "ui")]
 script = ExtResource("1_53q0u")
 vis = NodePath("PuzzleVisualizer")
 cam = NodePath("PuzzleCamera")
+ui = NodePath("UI")
 
 [node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761]
 script = ExtResource("2_pjrb6")
@@ -23,6 +25,24 @@ zoom = Vector2(0.5, 0.5)
 script = ExtResource("4_c651c")
 edge_margin = Vector2(32, 160)
 metadata/_custom_type_script = "uid://haho73xq30yv"
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=2036304951 node_paths=PackedStringArray("label_turns")]
+script = ExtResource("6_67ri8")
+label_turns = NodePath("LabelTurns")
+
+[node name="LabelTurns" type="Label" parent="UI" unique_id=1474085843]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 19.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "Turns: 2/3"
 
 [node name="GameMenu" parent="." unique_id=950523672 instance=ExtResource("6_4dugh")]
 allow_undo = true

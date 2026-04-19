@@ -7,10 +7,10 @@ var generator : PuzzleGenerator
 
 var enabled := true
 var locked := false
-var exhausted := false
 
 var max_times_used := -1 # -1 is basically "no max"
 var num_times_used := 0
+var num_times_modifier := 0
 var machine_filter := -1 # if >= 0, refers to the only machine it's allowed to move
 
 signal changed()
@@ -25,7 +25,7 @@ func set_direction(dir:PuzzleGrid.Direction) -> void:
 	changed.emit()
 
 func is_usable() -> bool:
-	return enabled and (not locked) and (not exhausted)
+	return enabled and (not locked) and (not is_exhausted())
 
 func acts_on(m:MachineData) -> bool:
 	if machine_filter == -1: return true
@@ -41,12 +41,18 @@ func set_enabled(en:bool) -> void:
 
 func change_times_used(dtu:int) -> void:
 	num_times_used = maxi(dtu, 0)
-	if max_times_used != -1:
-		exhausted = num_times_used >= max_times_used
 	changed.emit()
 
+func is_exhausted() -> bool:
+	if max_times_used == -1: return false
+	return num_times_used >= max_times_used
+
+func change_max_times_used(dmtu:int) -> void:
+	max_times_used += dmtu
+	change_times_used(0)
+
 func calculate_usage_and_reset() -> void:
-	max_times_used = num_times_used
+	max_times_used = num_times_used + num_times_modifier
 	num_times_used = 0
 
 func has_been_used() -> bool:

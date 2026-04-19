@@ -8,5 +8,4 @@ script = ExtResource("1_yc1m4")
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1220706974]
-modulate = Color(1, 0, 0, 1)
 texture = ExtResource("2_ma0n7")

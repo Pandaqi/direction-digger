@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TerrainArrows" format=3 uid="uid://cfkuddtupk8pv"]
+
+[ext_resource type="Script" uid="uid://c10df51fk1mks" path="res://generation/terrains/terrain_arrows.gd" id="1_ewhex"]
+
+[resource]
+script = ExtResource("1_ewhex")
+type = 6
+priority = 3
+metadata/_custom_type_script = "uid://c10df51fk1mks"

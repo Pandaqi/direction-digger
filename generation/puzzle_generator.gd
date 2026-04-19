@@ -8,9 +8,22 @@ var allow_backtracking := false
 var allow_reversing := false
 var arrow_max_times_used := 1
 var remove_all_unused_arrows := true
-var arrow_point_anywhere := true
+var arrow_point_anywhere := false
+var forbid_terrains_for_treasure := true
+
+# This is only about SPECIAl types; the default types + treasure are always active otherwise there is no puzzle to speak of
+var terrain_types_allowed : Array[CellData.TerrainType] = [CellData.TerrainType.ARROWS] #[CellData.TerrainType.LAVA, CellData.TerrainType.STONE, CellData.TerrainType.WEB, CellData.TerrainType.ENERGY]
+var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
+	CellData.TerrainType.STONE: preload("res://generation/terrains/terrain_stone.tres"),
+	CellData.TerrainType.WEB: preload("res://generation/terrains/terrain_web.tres"),
+	CellData.TerrainType.ENERGY: preload("res://generation/terrains/terrain_energy.tres"),
+	CellData.TerrainType.ICE: preload("res://generation/terrains/terrain_ice_lava.tres"),
+	CellData.TerrainType.LAVA: preload("res://generation/terrains/terrain_ice_lava.tres"),
+	CellData.TerrainType.ARROWS: preload("res://generation/terrains/terrain_arrows.tres"),
+}
 
 var treasure_probability := 0.33
+var alt_terrain_prob := 0.2
 var num_machines : int = PuzzleSettings.get_value("number_of_diggers")
 
 var grid : PuzzleGrid
@@ -21,6 +34,7 @@ var arrows_by_location : Dictionary[PuzzleGrid.Direction, Array] = {}
 var machines : Array[MachineData] = []
 
 var solution : Array[PuzzleCommand] = []
+var max_turns := 0
 
 func generate() -> void:
 	PuzzleSettings.apply_difficulty_properties(self)
@@ -80,6 +94,11 @@ func add_arrow(ad:ArrowData) -> void:
 func get_arrow(idx:int, loc:PuzzleGrid.Direction) -> ArrowData:
 	return arrows_by_location[loc][idx]
 
+func get_all_cells() -> Array[CellData]:
+	var arr : Array[CellData]
+	arr.assign(grid.cells)
+	return arr
+
 func get_random_cell() -> CellData:
 	return grid.cells.pick_random()
 
@@ -114,7 +133,6 @@ func take_turns() -> void:
 		
 		var cur_turn := solution.size()
 		var turn_picked : CommandArrow = valid_turns.pick_random()
-		solution.append(turn_picked)
 		
 		# when it's the right time, and we have machines left to place, place one
 		# @NOTE: we do this BEFORE executing the command to make sure this new machine is moved along with it!
@@ -128,6 +146,7 @@ func take_turns() -> void:
 		
 		# do the actual turn
 		commands.execute_command(turn_picked)
+		solution.append(turn_picked)
 		
 		# place treasure where machines ended up (if we CAN and SHOULD)
 		for machine in turn_picked.cells_targeted_by_machine:
@@ -138,8 +157,7 @@ func take_turns() -> void:
 				cell.add_treasure(new_treasure_num)
 				machine.set_last_treasure_number(new_treasure_num)
 	
-	# now always place one on our FINAL square, 
-	# (otherwise the last bit of path is meaningless)
+	# always place treasure on machine's FINAL squares (otherwise last path is meaningless)
 	# (in rare cases the algorithm terminates before placing all machines, which is always a failure case and we should immediately quit if so)
 	var is_invalid := false
 	for machine in machines:
@@ -147,15 +165,53 @@ func take_turns() -> void:
 		if not last_cell: 
 			is_invalid = true
 			break
+		last_cell.is_machine_ending_pos = true
+		
 		if not last_cell.can_place_treasure(): continue
 		last_cell.add_treasure(machine.get_last_treasure_number() + 1)
 	
 	if is_invalid: return
 	
-	# now place special blocks around the paths that machines took
-	# @TODO
+	# we set this value here because terrain types might manipulate it later
+	max_turns = solution.size()
+	generate_terrains()
 	
-	# @TODO: it might be worth placing some blocks _while_ moving machines for extra variation ---> such as a block that moves one machine, but not another when pressing an arrow that has them both in line
+	# finally, all cells that are left untouched go to the default terrain setting
+	for cell in get_all_cells():
+		if cell.type != CellData.TerrainType.NONE: continue
+		var filler_type := CellData.TerrainType.REGULAR_ALT if randf() <= alt_terrain_prob else CellData.TerrainType.REGULAR
+		cell.set_terrain(filler_type)
+
+func get_cells_available_for_terrain() -> Array[CellData]:
+	var cells_undecided := get_all_cells().filter(func(c:CellData): return c.can_receive_special_terrain())
+	if forbid_terrains_for_treasure:
+		cells_undecided = cells_undecided.filter(func(c:CellData): return not c.has_treasure())
+	
+	cells_undecided.shuffle()
+	return cells_undecided
+
+func get_cells_with_type(tp:CellData.TerrainType, list:Array[CellData] = []) -> Array[CellData]:
+	if list.size() <= 0: list.assign(grid.cells)
+	return list.filter(func(c:CellData): return c.type == tp)
+
+func get_cells_with_machine(list:Array[CellData] = []) -> Array[CellData]:
+	if list.size() <= 0: list.assign(grid.cells)
+	return list.filter(func(c:CellData): return c.has_machine())
+
+func generate_terrains() -> void:
+	# sort types first; some want to generate earlier than others for maximum effect
+	var types := terrain_types_allowed.duplicate(false)
+	types.sort_custom(func(a:CellData.TerrainType, b:CellData.TerrainType): 
+		return terrain_types_library[a].priority < terrain_types_library[b].priority
+	)
+	
+	# then let the individual scripts handle generating that type
+	for type in types:
+		if not (type in terrain_types_library): continue
+		terrain_types_library[type].generate(self)
+
+func change_max_turns(dmt:int) -> void:
+	max_turns += dmt
 
 func place_new_machine(arrow:ArrowData, machine_index:int) -> bool:
 	var cells_in_same_line := arrow.get_cells_in_line()
@@ -170,8 +226,7 @@ func place_new_machine(arrow:ArrowData, machine_index:int) -> bool:
 	rand_cell.add_machine(machines[machine_index])
 	return true
 
-func get_all_arrows_acting_on(machine:MachineData) -> Array[ArrowData]:
-	var pos := machine.cell.pos
+func get_all_arrows_acting_on(pos:Vector2i) -> Array[ArrowData]:
 	var indices : Array[int] = [pos.x, pos.x, pos.y, pos.y]
 	var directions : Array[PuzzleGrid.Direction] = [PuzzleGrid.Direction.UP, PuzzleGrid.Direction.DOWN, PuzzleGrid.Direction.LEFT, PuzzleGrid.Direction.RIGHT]
 	var arr : Array[ArrowData] = []
@@ -185,7 +240,7 @@ func get_all_valid_turns() -> Array[CommandArrow]:
 	# get all possible moves
 	for machine in machines:
 		if not machine.has_been_placed(): continue
-		var arrows_relevant := get_all_arrows_acting_on(machine) 
+		var arrows_relevant := get_all_arrows_acting_on(machine.cell.pos) 
 		for arrow in arrows_relevant:
 			var cmd := CommandArrow.new(arrow)
 			if not cmd.is_valid(): continue # ignore moves that would do nothing
@@ -217,6 +272,21 @@ func get_all_valid_turns() -> Array[CommandArrow]:
 	valid_turns.shuffle()
 	
 	return valid_turns
+
+func get_first_visit_to(cell:CellData) -> int:
+	for i in range(solution.size()):
+		var cmd := solution[i] as CommandArrow
+		if cmd.cells_targeted.has(cell):
+			return i
+	return -1
+
+func count_arrow_usage_until_turn(arrow:ArrowData, turn:int) -> int:
+	var sum := 0
+	for i in range(turn + 1):
+		var cmd := solution[i] as CommandArrow
+		if cmd.arrow != arrow: continue
+		sum += 1
+	return sum
 
 func count_treasure() -> int:
 	var sum := 0
@@ -254,6 +324,10 @@ func clean_up(desperate := false) -> bool:
 		machine.cell.remove_machine(machine)
 		machine.path.front().add_machine(machine)
 		machine.set_last_treasure_number(-1)
+	
+	# reset cells similarly
+	for cell in get_all_cells():
+		cell.reset_after_generation()
 	
 	# set arrow data based on their usage during generation
 	# @TODO: some setting for "randomizing" this, so SOME unneeded arrows are shown and SOME numbers are higher than strictly needed?

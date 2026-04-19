@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://yvlk0xtxggca"]
+
+[ext_resource type="Texture2D" uid="uid://c5cf68rihiri4" path="res://map/cells/tiles-spritesheet.png" id="1_neycp"]
+
+[node name="SpriteTerrain" type="Sprite2D" unique_id=1574625445]
+texture = ExtResource("1_neycp")
+hframes = 4
+vframes = 3

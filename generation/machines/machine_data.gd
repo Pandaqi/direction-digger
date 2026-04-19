@@ -5,6 +5,8 @@ var cell : CellData
 var path : Array[CellData]
 var last_treasure_number := -1
 
+static var colors = [Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.PURPLE]
+
 signal changed()
 
 func _init(idx:int) -> void:
@@ -18,6 +20,9 @@ func set_cell(c:CellData) -> void:
 	cell = c
 	if cell != null: path.append(cell)
 
+func set_starting_position(c:CellData) -> void:
+	path = [c]
+
 func has_been_placed() -> bool:
 	return path.size() > 0
 
@@ -26,3 +31,7 @@ func set_last_treasure_number(tn:int) -> void:
 
 func get_last_treasure_number() -> int:
 	return last_treasure_number
+
+func print_path() -> void:
+	var positions := path.map(func(c:CellData): return c.pos)
+	print(" -> ".join(positions))

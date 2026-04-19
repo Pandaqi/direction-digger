@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TerrainEnergy" format=3 uid="uid://cf3kfx1yt02mw"]
+
+[ext_resource type="Script" uid="uid://sophp81jf0ca" path="res://generation/terrains/terrain_energy.gd" id="1_u4cba"]
+
+[resource]
+script = ExtResource("1_u4cba")
+type = 7
+priority = 4
+metadata/_custom_type_script = "uid://sophp81jf0ca"

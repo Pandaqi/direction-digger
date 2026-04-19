@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://invbag5uje1d"]
+
+[ext_resource type="Script" uid="uid://c0bvrlrhr5dt" path="res://map/arrows/arrow_simplified.gd" id="1_y5gjs"]
+[ext_resource type="Texture2D" uid="uid://c03q78cfd1smw" path="res://map/arrows/arrows-spritesheet.png" id="2_fy5d0"]
+
+[node name="Arrow" type="Node2D" unique_id=778231180 node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_y5gjs")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1955302884]
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("2_fy5d0")
+hframes = 4

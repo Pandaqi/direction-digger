@@ -13,7 +13,9 @@ var busy := false
 ## Whether it plays a sound effect upon rewind => @TODO: will probably be extended to a more general "trigger (visual) effects or not" in the future
 @export var play_audio := false
 
+
 ## The "world" of the game, to access for tweening, animations, etc
+## Generator = underlying raw data; Visualizer = visual interactive version presented to player
 var visualizer
 
 ## Custom set by the game; the list of commands that represent the solution to the puzzle

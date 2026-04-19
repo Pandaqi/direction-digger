@@ -8,6 +8,6 @@ min_value = 1.0
 max_value = 6.0
 key = "number_of_diggers"
 label = "Number of Players"
-default = 1
+default = 2
 tooltip = "How many digging machines to place into the puzzle."
 metadata/_custom_type_script = "uid://bveqd8k261myk"

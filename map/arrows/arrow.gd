@@ -9,7 +9,7 @@ var data : ArrowData
 
 var hovering := false
 
-var direction_to_frame : Dictionary[PuzzleGrid.Direction, int] = {
+static var direction_to_frame : Dictionary[PuzzleGrid.Direction, int] = {
 	PuzzleGrid.Direction.RIGHT: 0,
 	PuzzleGrid.Direction.DOWN: 1,
 	PuzzleGrid.Direction.LEFT: 2,
@@ -59,7 +59,8 @@ func sync_to_data(ad:ArrowData) -> void:
 
 func _on_data_changed() -> void:
 	sprite.set_frame(direction_to_frame[data.direction])
-	sprite.modulate = Color.RED if data.exhausted else Color.WHITE
+	sprite.modulate = Color.WHITE
+	#sprite.modulate = Color.RED if data.is_exhausted() else Color.WHITE
 	
 	label.hide()
 	var usages_left := data.get_usages_left()

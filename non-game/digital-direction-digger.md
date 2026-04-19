@@ -2,18 +2,19 @@
 
 ## To-Do
 
-Implement special cells/rules:
+Implement special cells/rules
 
-* Stone
-* Spider Web
+* [x] Stone
+* [x] Spider Web
+* [x] Energy Magic
+* [x] Ice & Lava
 * Arrow Treasure
-* Ice & Lava
-* Energy Magic
+
+
 
 Create visuals:
 
 * Several unique diggers in unique colors. (Or ONE digger that's tintable.)
-* Terrain Types
 * Nice background
 * (Find Matching Fonts??)
 

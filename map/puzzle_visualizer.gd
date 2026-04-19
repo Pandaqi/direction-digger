@@ -13,7 +13,7 @@ var cells : Array[Cell]
 
 var turn := -1
 
-signal turns_changed(t:int)
+signal turns_changed(cur_turn:int, max_turns:int)
 
 static var cell_size := Vector2(256, 256)
 
@@ -45,15 +45,15 @@ func refresh_turn() -> void:
 	set_turn(commands.count())
 
 func set_turn(t:int) -> void:
-	var max_turns := generator.solution.size() - 1
+	var max_turns := generator.max_turns
 	var all_treasure_grabbed := generator.count_treasure() <= 0
-	var is_game_over := t > max_turns or all_treasure_grabbed
+	var is_game_over := t >= max_turns or all_treasure_grabbed
 	if is_game_over:
 		PuzzleFramework.finish_puzzle(all_treasure_grabbed)
 		return
 	
 	turn = clampi(t, 0, max_turns)
-	turns_changed.emit(turn)
+	turns_changed.emit(turn, max_turns)
 
 func _on_do_finished(cmd:PuzzleCommand) -> void:
 	if not cmd.starts_new_turn: return
@@ -115,8 +115,9 @@ func check_for_hotkeys(ev:InputEvent) -> void:
 	var arrow : ArrowData = null
 	for i in range(2):
 		if i >= generator.machines.size(): break
-
-		var arrows_relevant := generator.get_all_arrows_acting_on(generator.machines[i])
+		
+		var my_pos := generator.machines[i].cell.pos
+		var arrows_relevant := generator.get_all_arrows_acting_on(my_pos)
 		var key_ext := keys[i]
 		if ev.is_action_released("ui_left" + key_ext):
 			arrow = arrows_relevant[2]
