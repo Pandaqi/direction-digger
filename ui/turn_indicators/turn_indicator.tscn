@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://d23ojjwoswajr"]
+
+[ext_resource type="Script" uid="uid://dd36mtk3oa0eo" path="res://ui/turn_indicators/turn_indicator.gd" id="1_j4w5c"]
+[ext_resource type="Texture2D" uid="uid://ba2nol1esve05" path="res://ui/turn_indicators/turn-indicator-spritesheet.png" id="2_tyixh"]
+
+[node name="TurnIndicator" type="Node2D" unique_id=572801542 node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_j4w5c")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2138532234]
+texture_filter = 6
+texture = ExtResource("2_tyixh")
+hframes = 2

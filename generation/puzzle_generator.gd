@@ -158,17 +158,23 @@ func take_turns() -> void:
 				machine.set_last_treasure_number(new_treasure_num)
 	
 	# always place treasure on machine's FINAL squares (otherwise last path is meaningless)
+	# if we can't, keep working backwards, trying and trying to place something
 	# (in rare cases the algorithm terminates before placing all machines, which is always a failure case and we should immediately quit if so)
 	var is_invalid := false
 	for machine in machines:
-		var last_cell := machine.cell
-		if not last_cell: 
+		var path := machine.path
+		if path.size() <= 0:
 			is_invalid = true
 			break
-		last_cell.is_machine_ending_pos = true
 		
-		if not last_cell.can_place_treasure(): continue
-		last_cell.add_treasure(machine.get_last_treasure_number() + 1)
+		machine.cell.is_machine_ending_pos = true
+		
+		# @NOTE: goes to 0 instead of -1 because start pos is never allowed to have treasure
+		for i in range(path.size()-1,0,-1):
+			var cur_cell := path[i]
+			if not cur_cell.can_place_treasure(): continue
+			cur_cell.add_treasure(machine.get_last_treasure_number() + 1)
+			break
 	
 	if is_invalid: return
 	

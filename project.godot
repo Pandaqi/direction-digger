@@ -13,7 +13,7 @@ config_version=5
 config/name="direction-digger"
 run/main_scene="uid://gnji7ijcaxks"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://cqjvdughyfgqt"
 
 [autoload]
 

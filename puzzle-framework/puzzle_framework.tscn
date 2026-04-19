@@ -2,18 +2,22 @@
 
 [ext_resource type="Script" uid="uid://kme3xvun4gc4" path="res://puzzle-framework/puzzle_framework.gd" id="1_57jsw"]
 [ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="2_3a4ji"]
+[ext_resource type="PackedScene" uid="uid://v2gvc0f1p6r0" path="res://map/background/background.tscn" id="2_qky6c"]
 [ext_resource type="Resource" uid="uid://cduisti1i3nme" path="res://generation/difficulties/diff_easiest.tres" id="3_g61x5"]
 [ext_resource type="Script" uid="uid://xoy87uum5v5s" path="res://puzzle-framework/settings/setting.gd" id="4_uqhpv"]
 [ext_resource type="Resource" uid="uid://b352mosl6gb0l" path="res://generation/settings/number_of_diggers.tres" id="5_57jsw"]
 [ext_resource type="Resource" uid="uid://dtvi5u4qg5lq5" path="res://generation/settings/enable_keyboard_shortcuts.tres" id="6_57jsw"]
 [ext_resource type="Resource" uid="uid://bj7pb1bv8oyn1" path="res://generation/settings/show_numbers_on_treasure.tres" id="7_swsbt"]
 [ext_resource type="Resource" uid="uid://ckfgy73q4w2bs" path="res://generation/settings/make_machine_destination_treasure.tres" id="8_xffpj"]
+[ext_resource type="FontFile" uid="uid://due4q368nqp0t" path="res://ui/fonts/Goldsaber.otf" id="9_tgv6f"]
 
 [node name="PuzzleFramework" type="Node" unique_id=835186744]
 script = ExtResource("1_57jsw")
 game_name = "Direction Digger"
 game_version = "1.5.5"
 game_tagline = "Teaches Directions, Collaboration & Problem Solving"
-menu_pattern_enabled = true
+favicon = "main/direction-digger-favicon.png"
+menu_scene_custom = ExtResource("2_qky6c")
 difficulties = Array[ExtResource("2_3a4ji")]([ExtResource("3_g61x5")])
 settings = Array[ExtResource("4_uqhpv")]([ExtResource("5_57jsw"), ExtResource("6_57jsw"), ExtResource("7_swsbt"), ExtResource("8_xffpj")])
+font_heading = ExtResource("9_tgv6f")

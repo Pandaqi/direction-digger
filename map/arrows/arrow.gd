@@ -5,7 +5,9 @@ var data : ArrowData
 
 @export var sprite : Sprite2D
 @export var area : Area2D
+@export var label_container : Node2D
 @export var label : Label
+
 
 var hovering := false
 
@@ -61,6 +63,8 @@ func _on_data_changed() -> void:
 	sprite.set_frame(direction_to_frame[data.direction])
 	sprite.modulate = Color.WHITE
 	#sprite.modulate = Color.RED if data.is_exhausted() else Color.WHITE
+	
+	label_container.set_position(PuzzleGrid.convert_direction_to_vector(data.direction) * -1 * 24.0)
 	
 	label.hide()
 	var usages_left := data.get_usages_left()

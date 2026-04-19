@@ -6,11 +6,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v7bl7"]
 size = Vector2(256, 256)
 
-[node name="Arrow" type="Node2D" unique_id=896964718 node_paths=PackedStringArray("sprite", "area", "label")]
+[node name="Arrow" type="Node2D" unique_id=896964718 node_paths=PackedStringArray("sprite", "area", "label_container", "label")]
 script = ExtResource("1_v7bl7")
 sprite = NodePath("Sprite2D")
 area = NodePath("Area2D")
-label = NodePath("Label")
+label_container = NodePath("LabelContainer")
+label = NodePath("LabelContainer/Label")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=840506686]
 texture = ExtResource("2_0gpvp")
@@ -21,7 +22,10 @@ hframes = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=570876758]
 shape = SubResource("RectangleShape2D_v7bl7")
 
-[node name="Label" type="Label" parent="." unique_id=544889586]
+[node name="LabelContainer" type="Node2D" parent="." unique_id=169484037]
+position = Vector2(-32, 0)
+
+[node name="Label" type="Label" parent="LabelContainer" unique_id=544889586]
 offset_left = -46.0
 offset_top = -49.0
 offset_right = 51.0

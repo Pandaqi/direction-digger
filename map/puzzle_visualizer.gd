@@ -44,16 +44,16 @@ func visualize(gen:PuzzleGenerator) -> void:
 func refresh_turn() -> void:
 	set_turn(commands.count())
 
-func set_turn(t:int) -> void:
+func set_turn(t:int) -> void:	
 	var max_turns := generator.max_turns
+	turn = clampi(t, 0, max_turns)
+	turns_changed.emit(turn, max_turns)
+	
 	var all_treasure_grabbed := generator.count_treasure() <= 0
 	var is_game_over := t >= max_turns or all_treasure_grabbed
 	if is_game_over:
 		PuzzleFramework.finish_puzzle(all_treasure_grabbed)
 		return
-	
-	turn = clampi(t, 0, max_turns)
-	turns_changed.emit(turn, max_turns)
 
 func _on_do_finished(cmd:PuzzleCommand) -> void:
 	if not cmd.starts_new_turn: return

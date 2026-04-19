@@ -8,28 +8,31 @@ Implement special cells/rules
 * [x] Spider Web
 * [x] Energy Magic
 * [x] Ice & Lava
-* Arrow Treasure
-
-
+* [x] Arrow Treasure
 
 Create visuals:
 
-* Several unique diggers in unique colors. (Or ONE digger that's tintable.)
-* Nice background
-* (Find Matching Fonts??)
+* One digger that's tintable and matches the style of the rest.
+  * Wheels are separate and animated
+  * Digging drill is separate and animated
+  * **In cells, the digger is just a single sprite**
+  * **When moving, the wheel/drill "pop out" and that fake digger overlay actually animates and moves where it should go.**
 
 Other stuff (if I get stuck with things above):
 
 * Tweaks:
+  * CHECK IF ALL GOLD WAS ALREADY COLLECTED WAY BEFORE END OF PUZZLE -> Could do it brute force, or could do it in a smarter way by checking the first turn someone grabs a gold cell (taking webs into account)?
   * Allow marking treasure as "required" or "optional". If we have too much treasure at the end, we can remove some optional ones.
   * "Control" over how loose to be with arrows enabled/numbers
   * "Control" over min/max number of turns expected based on map size and machine count
+  * "Control" over how many wrong/useless special tiles are added just to distract the player
 * Sound Effects: Digging, Collect Treasure, Blocked, Unique stuff for terrain types
-* Animations: Fake move to new cell, Digging particles, Unique stuff for terrain types
+* Animations: Fake move to new cell, Digging particles, Collect Gold Particles, Transition for terrain change, Unique stuff for terrain types
 * Tutorial: Audio Narration + Pointer + Images
 * Difficulty Levels (can't really do them until I know all my generation rules though) + Settings
-* Favicon
-
+* Visuals:
+  * Background slightly darker/less distracting?
+  * Ensure it's always clear where all the gold is and how much you still need to grab?
 
 
 ## Future To-Do / Optional
@@ -43,6 +46,7 @@ Consider an alternative OBJECTIVE of **clearing the whole screen** ("visiting ev
 ## PuzzleFramework (THIS IS LATEST VERSION NOW)
 
 * @TODO: Allow setting the _scale_ of the `give_feedback` node?
+* Setting to DISABLE giving hints (in case parents want to make it harder or whatever)?
 * Create some reusable module for "react to click + hover on area" as I'm retyping that code again and again now ...
 * Consider moving the `is_valid()` to `PuzzleCommand` abstract class.
   * And it will always check before executing a command and not do anything if not allowed
