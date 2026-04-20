@@ -10,6 +10,7 @@ var allow_backtracking := false
 var arrow_max_times_used := 1
 var arrow_point_anywhere := false
 var forbid_terrains_for_treasure := true
+var forbid_treasure_below_machines := false
 
 var arrow_randomization_prob := 0.0
 var add_fake_terrains := false
@@ -22,7 +23,8 @@ var terrain_type_required := CellData.TerrainType.NONE
 
 #endregion
 
-var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
+static var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
+	CellData.TerrainType.NONE: preload("res://generation/terrains/terrain_default.tres"),
 	CellData.TerrainType.STONE: preload("res://generation/terrains/terrain_stone.tres"),
 	CellData.TerrainType.WEB: preload("res://generation/terrains/terrain_web.tres"),
 	CellData.TerrainType.ENERGY: preload("res://generation/terrains/terrain_energy.tres"),
@@ -63,7 +65,7 @@ func generate() -> void:
 		arrow_randomization_prob = 0.0
 	
 	var num_tries := 0
-	var max_tries := 100
+	var max_tries := 50
 	while true:
 		print("PuzzleGenerator | Attempt ", num_tries)
 		num_tries += 1
@@ -74,7 +76,7 @@ func generate() -> void:
 
 func create_grid() -> void:
 	# some custom exceptions for extreme cases; ensure grid is large enough
-	if machines.size() >= 5:
+	if num_machines >= 4:
 		grid_width_bounds.x = maxi(grid_width_bounds.x, 4)
 		grid_height_bounds.x = maxi(grid_height_bounds.x, 4)
 	
@@ -399,7 +401,8 @@ func clean_up(desperate := false) -> bool:
 	
 	# more nice-to-have checks that can be loosened
 	if not desperate:
-		var used_enough_turns := solution.size() >= get_num_turns_bounds().x
+		var num_turns := solution.size()
+		var used_enough_turns := num_turns >= get_num_turns_bounds().x
 		if not used_enough_turns: 
 			print("PuzzleGenerator | Attempt Discarded | Not enough turns")
 			return false
@@ -410,7 +413,7 @@ func clean_up(desperate := false) -> bool:
 			return false
 		
 		var machines_moved_enough := true
-		var min_moves := grid.size.x # seems a reasonable lower bound
+		var min_moves := mini(grid.size.x, floori(0.5 * num_turns / float(num_machines))) # seems a reasonable lower bound
 		for machine in machines:
 			if machine.path.size() < min_moves:
 				machines_moved_enough = false

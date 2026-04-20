@@ -2,12 +2,14 @@ extends PuzzleCommand
 class_name CommandWearDown
 
 var cell : CellData
+var audio_stream : AudioStream = preload("res://puzzle-framework/game/sfx/windup_stretch.ogg")
 
 func _init(c:CellData):
 	cell = c
 
 func do(cmds:PuzzleCommands) -> bool:
 	cell.change_custom_number(-1)
+	if cmds.visualizer: cmds.visualizer.play_audio_custom(cell, audio_stream)
 	if cell.get_custom_number() <= 0 and cell.type == CellData.TerrainType.WEB:
 		await cmds.execute_command(CommandTerrainRemove.new(cell))
 	return true

@@ -267,6 +267,50 @@ And more tiny stuff and bug fixes. Half of which I discovered->researched->fixed
 
 Anyway, they end result is an algorithm that generates nice, balanced, playable, diverse puzzles at all difficulties and settings. The Easiest mode has tiny 3x3 grids that can still support multiple machines and be actually interesting puzzles. The Hardest mode has a much larger grid, all special types enabled, easily fits 6 players/machines, and even adults won't solve those first try.
 
+## A Note on Code Quality
+
+At the start of this devlog, I mentioned wanting to make this specific idea---even though it's way more complicated than others thanks to the special terrains and such---precisely because it would challenge my skill. And it did.
+
+I encountered all sorts of new issues that forced me to update my Puzzle Framework, making it better (and more fully featured) for all future puzzle games. It _also_ means, however, that the code for this game became a bit ... messy. When you don't know exactly what you're doing, and you have to re-do bits all the time, it simply takes a toll on how "well" you code things. Instead of doing things in a "clean" or "proper" way, you do it in a way that would certainly cause issues if I wanted to add 5 more terrain types in the future. But I don't, so I was fine with that.
+
+To give a specific example of this, we can look at those terrain types. _What I would do if I had to start over_, is create a separate script for each terrain type that handles _everything_ about it. When you move into a cell,
+
+* Hey, that's a LAVA terrain.
+* Let's call the LAVA script.
+* ... the LAVA script does whatever it needs to do; the script calling it does not need to know anything about it ...
+* In this case, it would find all ICE tiles and melt them.
+
+Instead, the current game code has little bits and pieces everywhere checking for specific terrain types. The `CommandMove` script checks the logic for the terrain you enter, which means a handful of if-statements ("IF we've entered ICE, THEN do this"). It's not too bad, but not clean either. If the game had 10 more terrain types, this would be a big issue, because now the move command contains all sorts of logic that should just be self-contained within terrains. 
+
+The best example of "messy code" is the `CommandArrow` script. The "main command" that fires every turn when you click an arrow. 
+
+This script ... checks the logic for entering LAVA tiles. 
+
+Yep. That script, which should have nothing to do with LAVA tiles or checking terrains, contains the ~15 lines of code handling LAVA+ICE.
+
+Why? _Why?_ Well, I never planned for that. I actually _have_ those separate scripts per terrain, but their functionality ended up limited.
+
+Why? Because I discovered _new issues_ I never stumbled into before while making this project. In this case,
+
+* Let's say we check for LAVA tiles in the `CommandMove` too.
+* You move, you enter a LAVA tile, we check for all ice tiles with players on them, and unfreeze those players.
+* BUT WAIT ... what if another player moved with you this turn? What if they are evaluated _after_ you? They might walk into ice and freeze ... even though you grabbed a LAVA tile on the same turn!
+* And what if this turn moved _three_ players? One freezes, you grab lava and unfreeze them, then another player freezes? 
+
+The only clean solution to this is to handle LAVA _after_ everyone has finished moving. That way we control the order, and we know for sure that we'll unfreeze everyone that entered an ice tile this same turn. That's why it's in `CommandArrow`. First, that script moves all the machines. Then, it checks if any entered a LAVA tile.
+
+It would be much cleaner if every terrain had its own little `execute_post_move_operations()` function or whatever. And the LAVA terrain filled that function with the correct logic, instead of forcing it into some other place.
+
+I guess the best test is to ask yourself: "If I were to drop this project and return in 3 months, would I be able to instantly know where specific logic is / where to find anything?" And with terrain logic spread across 5 different illogical places, the answer is a clear _no_. And that means the code is messy!
+
+{{% update %}}
+After sleeping on it and realizing my next puzzle idea has a very similar core to this one, I thought it was worth the effort to actually clean up this code. Figure out the cleanest, most efficient system right now, with an otherwise finished product, so that the next game can start off strong. I mean, I wrote out exactly HOW to do it already :p 
+
+It ended up taking an hour or two to untangle everything and clean it up. It always takes less time than you think ... and I'm sure next time I'll be hesitant to clean up code again anyway because I somehow believe it will take a full day.
+
+The only "dirty" piece of code left is the exception in the code for Spider Webs: they display on TOP of everything, and become more transparent as you wear it down. That's just such a specific visual exception---no other terrain needs any of that---that I was fine with hardcoding those ~10 lines into the cell visualization code.
+{{% /update %}}
+
 
 ## Conclusion
 

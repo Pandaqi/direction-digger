@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://dv152yb60btx"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_qb3hy"]
+
+[resource]
+script = ExtResource("1_qb3hy")
+key = "disable_visual_effects"
+label = "Disable Visual Effects"
+default = false
+tooltip = "Disables potentially distracting visual effects (e.g. shine on treasure)."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

@@ -47,6 +47,10 @@ func is_special_terrain() -> bool:
 func is_default_terrain() -> bool:
 	return [TerrainType.NONE, TerrainType.REGULAR, TerrainType.REGULAR_ALT].has(type)
 
+func get_terrain_resource() -> TerrainData:
+	if not (type in PuzzleGenerator.terrain_types_library): return PuzzleGenerator.terrain_types_library[CellData.TerrainType.NONE]
+	return PuzzleGenerator.terrain_types_library[type]
+
 func get_terrain() -> TerrainType:
 	return type
 
@@ -116,6 +120,7 @@ func has_been_visited_multiple_times() -> bool:
 	return count_visits() > 1
 
 func count_visits() -> int:
+	if is_machine_starting_pos: return machines_history.size() - 1 # initial placement does not count as visit
 	return machines_history.size()
 
 func has_seen_multiple_machines() -> bool:
@@ -125,7 +130,9 @@ func has_seen_only_one_machine() -> bool:
 	return get_machine_indices().size() == 1
 
 func can_place_treasure() -> bool:
-	return (not has_treasure()) and (not is_machine_starting_pos)
+	if has_treasure(): return false
+	if PuzzleSettings.get_difficulty_property("forbid_treasure_below_machines") and is_machine_starting_pos: return false
+	return true
 
 func can_collect_treasure(machine:MachineData) -> bool:
 	if type == TerrainType.WEB and get_custom_number() > 0: return false
@@ -153,7 +160,6 @@ func treasure_is_required() -> bool:
 func get_max_visits_allowed_for_treasure() -> int:
 	return custom_number if type == CellData.TerrainType.WEB else 1
 
-# @TODO: this must likely be extended once we introduce specific TYPES that the cell can be
 func can_receive_machine() -> bool:
 	return not has_machine() and not has_treasure() and not is_machine_starting_pos
 

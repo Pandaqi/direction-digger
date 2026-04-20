@@ -1,6 +1,8 @@
 extends TerrainData
 class_name TerrainArrows
 
+var audio_positive := preload("res://generation/terrains/diamond-clink.ogg")
+
 func generate(gen:PuzzleGenerator) -> void:
 	var cells_visited := get_cells_visited(gen.get_cells_available_for_terrain())
 	
@@ -45,3 +47,7 @@ func generate_fake(gen:PuzzleGenerator, c:CellData) -> bool:
 	c.set_terrain(CellData.TerrainType.ARROWS)
 	c.set_custom_arrows(arrows.slice(0, rand_num))
 	return true
+
+func on_move(cell:CellData, _cmd:CommandMove, cmds:PuzzleCommands) -> void:
+	cmds.visualizer.play_audio_custom(cell, audio_positive)
+	await cmds.execute_command(CommandArrowsChange.new(cell))

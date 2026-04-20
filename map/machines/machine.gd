@@ -29,7 +29,9 @@ func play_digging_animation() -> void:
 	visuals.show()
 	audio_digging.play()
 	anim_player.play("dig")
-	particles_digging.set_emitting(true)
+	
+	if not PuzzleSettings.get_value("disable_visual_effects"):
+		particles_digging.set_emitting(true)
 
 func stop_digging_animation() -> void:
 	particles_digging.set_emitting(false)

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PuzzleTutorialStage" format=3 uid="uid://ddrg5hi3bc60c"]
+
+[ext_resource type="Script" uid="uid://dbnf0revlghrs" path="res://puzzle-framework/tutorial/puzzle_tutorial_stage.gd" id="1_dfdrf"]
+[ext_resource type="AudioStream" uid="uid://d2ylnfyg2ixee" path="res://ui/tutorial/audio/female/tut-hardest.ogg" id="1_jo18g"]
+
+[resource]
+script = ExtResource("1_dfdrf")
+audio = ExtResource("1_jo18g")
+metadata/_custom_type_script = "uid://dbnf0revlghrs"

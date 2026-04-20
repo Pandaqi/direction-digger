@@ -25,6 +25,7 @@
 [ext_resource type="Resource" uid="uid://ckfhyqbqnevny" path="res://generation/settings/heading_controls.tres" id="18_7qwr0"]
 [ext_resource type="Resource" uid="uid://dd0vnvmg7igdg" path="res://generation/settings/heading_difficulty.tres" id="18_hxaq4"]
 [ext_resource type="Resource" uid="uid://d1g3r4l57qeho" path="res://generation/settings/make_solution_perfect.tres" id="21_gogk4"]
+[ext_resource type="Resource" uid="uid://dv152yb60btx" path="res://generation/settings/disable_visual_effects.tres" id="21_pwp8v"]
 [ext_resource type="Resource" uid="uid://3xgyg56i1hjh" path="res://generation/settings/randomize_arrow_directions.tres" id="22_q4ynd"]
 
 [node name="PuzzleFramework" type="Node" unique_id=835186744]
@@ -35,5 +36,5 @@ game_tagline = "Teaches Directions, Collaboration & Problem Solving"
 favicon = "main/direction-digger-favicon.png"
 menu_scene_custom = ExtResource("2_qky6c")
 difficulties = Array[ExtResource("2_3a4ji")]([ExtResource("3_g61x5"), ExtResource("5_hsw23"), ExtResource("6_ndg7f"), ExtResource("7_gogk4"), ExtResource("8_q4ynd")])
-settings = Array[ExtResource("4_uqhpv")]([ExtResource("10_q4ynd"), ExtResource("6_k0h2b"), ExtResource("11_ftmnh"), ExtResource("7_w5xje"), ExtResource("12_w5ts3"), ExtResource("8_ftmnh"), ExtResource("9_w5ts3"), ExtResource("10_rtetl"), ExtResource("18_7qwr0"), ExtResource("5_57jsw"), ExtResource("6_57jsw"), ExtResource("18_hxaq4"), ExtResource("8_xffpj"), ExtResource("7_swsbt"), ExtResource("21_gogk4"), ExtResource("22_q4ynd")])
+settings = Array[ExtResource("4_uqhpv")]([ExtResource("10_q4ynd"), ExtResource("6_k0h2b"), ExtResource("11_ftmnh"), ExtResource("7_w5xje"), ExtResource("12_w5ts3"), ExtResource("8_ftmnh"), ExtResource("9_w5ts3"), ExtResource("10_rtetl"), ExtResource("18_7qwr0"), ExtResource("5_57jsw"), ExtResource("6_57jsw"), ExtResource("21_pwp8v"), ExtResource("18_hxaq4"), ExtResource("8_xffpj"), ExtResource("7_swsbt"), ExtResource("21_gogk4"), ExtResource("22_q4ynd")])
 font_heading = ExtResource("9_tgv6f")

@@ -159,3 +159,11 @@ func play_full_solution() -> void:
 func play_undo_audio() -> void:
 	if not play_audio: return
 	PuzzleAudio.play_audio_nice(PuzzleFramework.audio.undo_audio)
+
+func await_command_sequence(commands:Array[PuzzleCommand]) -> bool:
+	var num_commands_done := 0
+	while num_commands_done < commands.size():
+		var cmd_finished = await self.do_finished
+		if not commands.has(cmd_finished): continue
+		num_commands_done += 1
+	return true

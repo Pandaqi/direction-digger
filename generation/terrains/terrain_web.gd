@@ -16,3 +16,8 @@ func generate(gen:PuzzleGenerator) -> void:
 		cell.add_treasure(-1) # just allow this one to be collected "whenever"; easiest solve
 		if cell.has_seen_only_one_machine():
 			cell.set_machine_filter(cell.get_machine_indices().front())
+
+func on_move(cell:CellData, cmd:CommandMove, cmds:PuzzleCommands) -> void:
+	var web_active := cell.terrain_acts_on(cmd.machine)
+	if web_active:
+		await cmds.execute_command(CommandWearDown.new(cell))

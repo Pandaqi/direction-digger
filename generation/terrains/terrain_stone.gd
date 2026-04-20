@@ -18,3 +18,8 @@ func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
 	if c.has_been_visited(): return false
 	c.set_terrain(CellData.TerrainType.STONE)
 	return true
+
+func is_move_valid(cell:CellData, cmd:CommandMove) -> bool:
+	if cell != cmd.target_cell: return true
+	var terrain_active := cmd.target_cell.terrain_acts_on(cmd.machine, true)
+	return not terrain_active

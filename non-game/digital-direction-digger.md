@@ -2,37 +2,24 @@
 
 ## To-Do
 
-Implement special cells/rules
+**OTHER**:
 
-* [x] Stone
-* [x] Spider Web
-* [x] Energy Magic
-* [x] Ice & Lava
-* [x] Arrow Treasure
+* Tutorial: Images
+* (Puzzle Generation: Make it faster / more likely to succeed with high number of machines => Sometimes still breaks???)
 
-Create visuals:
 
-* One digger that's tintable and matches the style of the rest.
-  * Wheels are separate and animated
-  * Digging drill is separate and animated
-  * **In cells, the digger is just a single sprite**
-  * **When moving, the wheel/drill "pop out" and that fake digger overlay actually animates and moves where it should go.**
+**DIGGER:** One digger that's tintable and matches the style of the rest.
+* Wheels are separate and animated
+* Digging drill is separate and animated
+* **In cells, the digger is just a single sprite**
+* **When moving, the wheel/drill "pop out" and that fake digger overlay actually animates and moves where it should go.**
 
 
 
 
-BOTTLENECKY
-
-THINGS ARE LOOKING UP
-
-YOU'RE NEVER EVER SCORING / BRICK WALL / IMMACULATE DEFENSE ---> A game about getting a golf ball into a hole / a ball into a goal ... but each level has a different "trick" in which it tries to make you fail. (Example: When you kick the ball, the goal will always move exactly 500 pixels to the left.)
 
 
-Other stuff (if I get stuck with things above):
 
-* Sound Effects: Unique stuff for terrain types
-* Animations: Transition for terrain change (Dissolve Shader?), Add that SHINE shader to Gold that I used for diamonds before?, Unique stuff for terrain types
-* Tutorial: Audio Narration (listen to male/female/none setting) + Pointer + Images
 
 
 ## Future To-Do / Optional
@@ -58,7 +45,7 @@ Consider an alternative OBJECTIVE of **clearing the whole screen** ("visiting ev
 
 ## Easiest
 
-TUTORIAL = "Press one of the arrows to move all digging machines that it points to. Move them around such that you collect all the gold!"
+TUTORIAL = "Press one of the arrows to move all the digging machines that it points to. Move the machines around such that you collect all the gold!"
 
 grid_width_bounds = Vector2i(3,3)
 grid_height_bounds = Vector2i(3,3)
@@ -93,7 +80,7 @@ terrain_types_allowed = [CellData.TerrainType.STONE(3)]
 
 ## Medium
 
-TUTORIAL = "The spider web always hides treasure. Every time you move through it, the number gets lower. Once the web disappears, you can finally take the treasure!"
+TUTORIAL = "The spider web always hides treasure. Every time you move through it, its number gets lower. Once the web disappears, you can finally take the treasure!"
 
 grid_width_bounds = Vector2i(4,5)
 grid_height_bounds = Vector2i(4,4)
@@ -111,7 +98,7 @@ special_types_allowed = [CellData.TerrainType.STONE(3), CellData.TerrainType.WEB
 
 ## Hard
 
-TUTORIAL = "A cell with ice crystals will freeze a machine! Another machine must visit a lava cell to unfreeze you again."
+TUTORIAL = "A tile with ice crystals will freeze a machine! Another machine must visit a lava tile to unfreeze you again."
 
 grid_width_bounds = Vector2i(4,6)
 grid_height_bounds = Vector2i(4,4)
@@ -129,7 +116,7 @@ special_types_allowed = [CellData.TerrainType.STONE(3), CellData.TerrainType.WEB
 
 ## Hardest
 
-TUTORIAL = "The green cell gives you more turns. The purple cell gives you extra arrows."
+TUTORIAL = "The green gemstone gives you more turns. The purple diamond gives you extra arrows."
 
 grid_width_bounds = Vector2i(5,6)
 grid_height_bounds = Vector2i(4,4)

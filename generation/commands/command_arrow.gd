@@ -17,9 +17,8 @@ func do(cmds:PuzzleCommands) -> bool:
 	cells_targeted_by_machine = {}
 	machines_targeted = []
 	
+	# execute all move commands in parallel
 	var commands_valid : Array[CommandMove] = get_commands().filter(func(c:CommandMove): return c.is_valid())
-	
-	var num_commands_done := 0
 	for cmd in commands_valid:
 		# cache/track some statistics of what we did for generation sanity checks
 		var target_cell := cmd.get_target_cell()
@@ -29,24 +28,16 @@ func do(cmds:PuzzleCommands) -> bool:
 		
 		cmds.execute_command(cmd)
 	
-	# we want moves to happen in PARALLEL, so we don't await them one by one
-	# but catch every move as it finishes and simply count if we're done
-	while (not cmds.generating) and num_commands_done < commands_valid.size():
-		var cmd_finished = await cmds.do_finished
-		if not (cmd_finished is CommandMove): continue
-		if not commands_valid.has(cmd_finished): continue
-		num_commands_done += 1
+	if cmds.generating: return true
 	
-	# ice/lava changes are applied AFTER moving everyone
-	# otherwise we get issues with order (sometimes unfreeze comes before frozen machine tries to move, sometimes after, blabla)
-	var lava_cells := cells_targeted.filter(func(c:CellData): return c.type == CellData.TerrainType.LAVA)
-	if lava_cells.size() > 0 and (not cmds.generating):
-		for lava_cell in lava_cells:
-			await cmds.execute_command(CommandTerrainRemove.new(lava_cell))
-		var gen : PuzzleGenerator = cmds.visualizer.generator
-		var ice_cells_occupied := gen.get_cells_with_type(CellData.TerrainType.ICE, gen.get_cells_with_machine())
-		for ice_cell in ice_cells_occupied:
-			await cmds.execute_command(CommandTerrainRemove.new(ice_cell))
+	# we want moves to happen in PARALLEL, so we don't await them one by one in code above
+	# but catch every move as it finishes and simply count if we're done
+	var cmd_seq : Array[PuzzleCommand]
+	cmd_seq.assign(commands_valid)
+	await cmds.await_command_sequence(cmd_seq)
+	
+	for cell in cells_targeted:
+		await cell.get_terrain_resource().on_post_move(cell, cmds)
 	
 	return true
 

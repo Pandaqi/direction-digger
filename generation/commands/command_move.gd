@@ -26,22 +26,15 @@ func do(cmds:PuzzleCommands) -> bool:
 	# so just move the machine and don't do anything else
 	if cmds.generating: return true
 	
-	var remove_terrain := false
-	var web_active := target_cell.terrain_acts_on(machine)
-	if target_cell.type == CellData.TerrainType.WEB and web_active:
-		await cmds.execute_command(CommandWearDown.new(target_cell))
+	# ask terrain to do whatever it wants
+	var terrain_data := target_cell.get_terrain_resource()
+	await terrain_data.on_move(target_cell, self, cmds)
 	
-	if target_cell.type == CellData.TerrainType.ENERGY:
-		remove_terrain = true
-		await cmds.execute_command(CommandEnergy.new())
-	
-	if target_cell.type == CellData.TerrainType.ARROWS:
-		remove_terrain = true
-		await cmds.execute_command(CommandArrowsChange.new(target_cell))
-	
-	if remove_terrain:
+	# remove terrain if the type demands it
+	if terrain_data.remove_on_visit:
 		await cmds.execute_command(CommandTerrainRemove.new(target_cell))
 	
+	# collect treasures as needed
 	var should_collect := target_cell.has_treasure()
 	var can_collect := target_cell.can_collect_treasure(machine)
 	if should_collect and can_collect:
@@ -74,14 +67,9 @@ func is_valid() -> bool:
 		if not cmd_other_machine.is_valid():
 			return false
 	
-	# stone blocks us
-	var terrain_active := target_cell.terrain_acts_on(machine, true)
-	if target_cell.type == CellData.TerrainType.STONE and terrain_active:
-		return false
-	
-	# ice freezes us
-	if current_cell.type == CellData.TerrainType.ICE:
-		return false
+	# check if the terrain type protests for some reason
+	if not current_cell.get_terrain_resource().is_move_valid(current_cell, self): return false
+	if not target_cell.get_terrain_resource().is_move_valid(target_cell, self): return false
 	
 	return true
 

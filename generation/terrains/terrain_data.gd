@@ -13,6 +13,9 @@ class_name TerrainData
 ## lower = called earlier in generation
 @export var priority := 1
 
+## whether to destroy the terrain whenever it's visited/activated its special power
+@export var remove_on_visit := false
+
 ## utility function for drawing from the list of all available options
 func draw_elements_balanced(list:Array[CellData]) -> Array[CellData]:
 	var arr : Array[CellData] = []
@@ -33,3 +36,12 @@ func generate(_gen:PuzzleGenerator) -> void:
 
 func generate_fake(_gen:PuzzleGenerator, _cell:CellData) -> bool:
 	return false
+
+func on_move(_cell:CellData, _cmd:CommandMove, _cmds:PuzzleCommands) -> void:
+	pass
+
+func on_post_move(_cell:CellData, _cmds:PuzzleCommands) -> void:
+	pass
+
+func is_move_valid(_cell:CellData, _cmd:CommandMove) -> bool:
+	return true

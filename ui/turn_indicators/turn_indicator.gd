@@ -13,5 +13,5 @@ func set_enabled(val:bool) -> void:
 	sprite.set_frame(0 if val else 1)
 	sprite.modulate.a = 1.0 if val else 0.33
 	
-	if was_enabled != enabled:
+	if was_enabled != enabled and (not PuzzleSettings.get_value("disable_visual_effects")):
 		PuzzleTween.play_shake_tween(sprite, Vector2(4,8))

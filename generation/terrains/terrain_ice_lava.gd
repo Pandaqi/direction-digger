@@ -3,6 +3,9 @@ class_name TerrainIceLava
 
 @export var debug_print := false
 
+var audio_lava : AudioStream = preload("res://generation/terrains/ice-break-melt.ogg")
+var audio_freeze := preload("res://generation/terrains/ice-freeze.ogg")
+
 func generate(gen:PuzzleGenerator) -> void:
 	# small helper class to track statistics in a clean (type-checked) way
 	var machine_move_data : Dictionary[MachineData, MachineMoveData] = {}
@@ -115,3 +118,25 @@ func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
 	if c.has_been_visited() and randf() <= 0.75: return false
 	c.set_terrain(CellData.TerrainType.LAVA)
 	return true
+
+func is_move_valid(cell:CellData, cmd:CommandMove) -> bool:
+	if cell != cmd.current_cell: return true # we only care about where we came FROM
+	if cmd.current_cell.type == CellData.TerrainType.ICE: return false # if we came FROM ice, we can't move
+	return true
+
+func on_move(cell:CellData, _cmd:CommandMove, cmds:PuzzleCommands) -> void:
+	if cell.type != CellData.TerrainType.ICE: return
+	cmds.visualizer.play_audio_custom(cell, audio_freeze)
+
+# ice/lava changes are applied AFTER moving everyone
+# otherwise we get issues with order (sometimes unfreeze comes before frozen machine tries to move, sometimes after, blabla)
+func on_post_move(cell:CellData, cmds:PuzzleCommands) -> void:
+	if cell.type != CellData.TerrainType.LAVA: return
+	
+	var vis := cmds.visualizer as PuzzleVisualizer
+	await cmds.execute_command(CommandTerrainRemove.new(cell))
+	vis.play_audio_custom(cell, audio_lava)
+
+	var ice_cells_occupied := vis.generator.get_cells_with_type(CellData.TerrainType.ICE, vis.generator.get_cells_with_machine())
+	for ice_cell in ice_cells_occupied:
+		await cmds.execute_command(CommandTerrainRemove.new(ice_cell))

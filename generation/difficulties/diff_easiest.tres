@@ -2,15 +2,18 @@
 
 [ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="1_gnrw5"]
 [ext_resource type="Script" uid="uid://dbnf0revlghrs" path="res://puzzle-framework/tutorial/puzzle_tutorial_stage.gd" id="2_lk5x5"]
+[ext_resource type="Resource" uid="uid://m2n0glwgxihk" path="res://ui/tutorial/tut_easiest.tres" id="3_lk5x5"]
 
 [resource]
 script = ExtResource("1_gnrw5")
+tutorial = Array[ExtResource("2_lk5x5")]([ExtResource("3_lk5x5")])
 properties = Dictionary[String, Variant]({
 "add_fake_terrains": false,
 "allow_backtracking": false,
 "arrow_max_times_used": 1,
 "arrow_randomization_prob": 0.0,
 "forbid_terrains_for_treasure": true,
+"forbid_treasure_below_machines": true,
 "grid_height_bounds": Vector2i(3, 3),
 "grid_width_bounds": Vector2i(3, 3),
 "num_turns_bounds": Vector2i(2, 4),

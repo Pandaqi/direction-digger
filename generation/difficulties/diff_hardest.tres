@@ -2,10 +2,12 @@
 
 [ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="1_ldw5f"]
 [ext_resource type="Script" uid="uid://dbnf0revlghrs" path="res://puzzle-framework/tutorial/puzzle_tutorial_stage.gd" id="2_3snvw"]
+[ext_resource type="Resource" uid="uid://ddrg5hi3bc60c" path="res://ui/tutorial/tut_hardest.tres" id="3_3snvw"]
 
 [resource]
 script = ExtResource("1_ldw5f")
 difficulty = 4
+tutorial = Array[ExtResource("2_3snvw")]([ExtResource("3_3snvw")])
 properties = Dictionary[String, Variant]({
 "add_fake_terrains": true,
 "allow_backtracking": true,

@@ -1,6 +1,8 @@
 extends TerrainData
 class_name TerrainEnergy
 
+var audio_positive := preload("res://generation/terrains/diamond-clink.ogg")
+
 func generate(gen:PuzzleGenerator) -> void:
 	var cells_possible : Array[CellData] = []
 	var sol := gen.solution
@@ -30,3 +32,7 @@ func generate(gen:PuzzleGenerator) -> void:
 func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
 	c.set_terrain(CellData.TerrainType.ENERGY)
 	return true
+
+func on_move(cell:CellData, _cmd:CommandMove, cmds:PuzzleCommands) -> void:
+	cmds.visualizer.play_audio_custom(cell, audio_positive)
+	await cmds.execute_command(CommandEnergy.new())

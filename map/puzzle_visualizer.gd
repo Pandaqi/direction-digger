@@ -18,6 +18,7 @@ var machines : Array[Machine] = []
 @export var audio_arrow_click : AudioStreamPlayer2D
 @export var audio_arrow_fail : AudioStreamPlayer2D
 @export var audio_treasure : AudioStreamPlayer2D
+@export var audio_custom : AudioStreamPlayer2D
 
 @export var particles_treasure_scene : PackedScene
 
@@ -25,6 +26,7 @@ var turn := -1
 
 signal turns_changed(cur_turn:int, max_turns:int)
 signal treasure_collected(tres_left:int, tres_total:int)
+signal loading_finished()
 
 static var cell_size := Vector2(256, 256)
 
@@ -59,7 +61,7 @@ func visualize(gen:PuzzleGenerator) -> void:
 	
 	set_turn(0)
 	on_treasures_changed()
-	PuzzleFramework.start_puzzle()
+	loading_finished.emit()
 
 func animate_movement(cmd:CommandMove) -> void:
 	var machine := machines[cmd.machine.index]
@@ -109,6 +111,11 @@ func _on_undo_finished(_cmds:Array[PuzzleCommand]) -> void:
 func convert_grid_pos_to_real_pos(pos:Vector2i) -> Vector2:
 	return Vector2(pos) * cell_size
 
+func play_audio_custom(cell:CellData, aus:AudioStream) -> void:
+	audio_custom.stream = aus
+	audio_custom.set_position(convert_grid_pos_to_real_pos(cell.pos))
+	PuzzleAudio.play_audio_nice(audio_custom)
+
 func place_cell(cell_data:CellData) -> void:
 	var cell : Cell = cell_scene.instantiate()
 	cell.set_position(convert_grid_pos_to_real_pos(cell_data.pos))
@@ -135,6 +142,9 @@ func place_arrow(idx:int, loc:PuzzleGrid.Direction, ad:ArrowData) -> void:
 	
 	arrow.clicked.connect(_on_arrow_clicked, CONNECT_APPEND_SOURCE_OBJECT)
 	arrow.hovered.connect(_on_arrow_hovered, CONNECT_APPEND_SOURCE_OBJECT)
+
+func get_arrow_from_data(ad:ArrowData) -> Arrow:
+	return arrows[ arrows.find_custom(func(a:Arrow): return a.data == ad) ]
 
 func _on_arrow_clicked(a:Arrow) -> void:
 	execute_arrow(a.data)
