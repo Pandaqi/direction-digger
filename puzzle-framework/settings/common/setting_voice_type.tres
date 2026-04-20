@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PuzzleSettingDropdown" format=3 uid="uid://ccl0b2xjonk5t"]
+
+[ext_resource type="Script" uid="uid://cj5qrvnds355q" path="res://puzzle-framework/settings/setting_dropdown.gd" id="1_irxic"]
+
+[resource]
+script = ExtResource("1_irxic")
+options = Array[String](["none", "male", "female"])
+key = "voice_type"
+label = "Voice Type Tutorial / Narration"
+default = "female"
+tooltip = "Changes the voice used when playing (narrated) audio."
+metadata/_custom_type_script = "uid://cj5qrvnds355q"

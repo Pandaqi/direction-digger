@@ -2,8 +2,6 @@ extends TerrainData
 class_name TerrainEnergy
 
 func generate(gen:PuzzleGenerator) -> void:
-	var cells_visited := get_cells_visited(gen.get_cells_available_for_terrain())
-
 	var cells_possible : Array[CellData] = []
 	var sol := gen.solution
 	for i in range(sol.size()-1, -1, -1):
@@ -28,3 +26,7 @@ func generate(gen:PuzzleGenerator) -> void:
 	for elem in cells_possible:
 		elem.set_terrain(CellData.TerrainType.ENERGY)
 		gen.change_max_turns(-1)
+
+func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
+	c.set_terrain(CellData.TerrainType.ENERGY)
+	return true

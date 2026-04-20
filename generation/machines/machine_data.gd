@@ -32,6 +32,11 @@ func set_last_treasure_number(tn:int) -> void:
 func get_last_treasure_number() -> int:
 	return last_treasure_number
 
+func turns_since_last_treasure() -> int:
+	for i in range(path.size()-1,-1,-1):
+		if path[i].has_treasure(): return path.size() - 1 - i
+	return path.size()
+
 func print_path() -> void:
 	var positions := path.map(func(c:CellData): return c.pos)
 	print(" -> ".join(positions))

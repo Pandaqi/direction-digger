@@ -68,3 +68,18 @@ func load_background_music(bg_music:Array[AudioStream]) -> void:
 		randomizer.add_stream(-1, song)
 	bg_audio.stream = randomizer
 	bg_audio.play()
+
+func get_fallback_audio_player() -> AudioStreamPlayer:
+	return state_audio
+
+static func get_voice_over(path:String) -> AudioStream:
+	var voice_type : String = PuzzleSettings.get_value("voice_type")
+	if not voice_type or voice_type == "none": return null
+	
+	var full_path : String = "res://" + PuzzleFramework.voice_over_root + "/" + voice_type + "/" + path
+	return load(full_path)
+
+static func play_voice(path_to_audio:String, ap:AudioStreamPlayer = null) -> void:
+	if not ap: ap = PuzzleFramework.audio.get_fallback_audio_player()
+	ap.stream = get_voice_over(path_to_audio)
+	ap.play()

@@ -34,5 +34,7 @@ func get_by_key(key:String) -> PuzzleSetting:
 # Allow going out of menu by clicking outside of it too
 func _unhandled_input(ev: InputEvent) -> void:
 	if not active: return
-	if not (ev is InputEventMouseButton) and not (ev is InputEventScreenTouch): return
+	var outside_click : bool = (ev is InputEventMouseButton) and ev.button_index == MOUSE_BUTTON_LEFT
+	var outside_tap := (ev is InputEventScreenTouch)
+	if not (outside_click or outside_tap): return
 	toggle_active()

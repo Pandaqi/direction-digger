@@ -29,6 +29,7 @@ var settings_by_id : Dictionary[String, PuzzleSetting] = {}
 @export var font_body : FontFile = preload("res://puzzle-framework/ui/fonts/LilitaOne-Regular.ttf")
 
 @export_group("Audio")
+@export var voice_over_root : String = "ui/tutorial/audio"
 @export var bg_music : Array[AudioStream] = []
 
 var commands : PuzzleCommands

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://3xgyg56i1hjh"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_p45aj"]
+
+[resource]
+script = ExtResource("1_p45aj")
+key = "randomize_arrow_directions"
+label = "Randomize Arrow Directions"
+default = false
+tooltip = "Arrows can point anywhere (not always into map); makes puzzles harder."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

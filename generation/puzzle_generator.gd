@@ -1,18 +1,27 @@
 class_name PuzzleGenerator
 
+#region DifficultySettings
+
 var grid_width_bounds := Vector2i(3,3)
 var grid_height_bounds := Vector2i(3,3)
-var num_turns_bounds := Vector2i(3,6)
+var num_turns_bounds := Vector2i(2,4)
 
 var allow_backtracking := false
-var allow_reversing := false
 var arrow_max_times_used := 1
-var remove_all_unused_arrows := true
 var arrow_point_anywhere := false
 var forbid_terrains_for_treasure := true
 
+var arrow_randomization_prob := 0.0
+var add_fake_terrains := false
+
 # This is only about SPECIAl types; the default types + treasure are always active otherwise there is no puzzle to speak of
-var terrain_types_allowed : Array[CellData.TerrainType] = [CellData.TerrainType.ARROWS] #[CellData.TerrainType.LAVA, CellData.TerrainType.STONE, CellData.TerrainType.WEB, CellData.TerrainType.ENERGY]
+var terrain_types_allowed : Array[CellData.TerrainType] = []
+
+# When introducing a new type, we want to make sure it actually appears on the map otherwise the tutorial is really confusing :p
+var terrain_type_required := CellData.TerrainType.NONE
+
+#endregion
+
 var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
 	CellData.TerrainType.STONE: preload("res://generation/terrains/terrain_stone.tres"),
 	CellData.TerrainType.WEB: preload("res://generation/terrains/terrain_web.tres"),
@@ -22,7 +31,17 @@ var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
 	CellData.TerrainType.ARROWS: preload("res://generation/terrains/terrain_arrows.tres"),
 }
 
+var allow_reversing := false
+var remove_all_unused_arrows := true
+
 var treasure_probability := 0.33
+var treasure_total := 0
+var treasure_max_ratio := 0.75
+
+var arrow_randomization_bounds := Vector2i(1,2)
+var fake_terrains_prob := 0.25
+var place_all_machines_at_start := true # @NOTE: the other implementation is BROKEN
+
 var alt_terrain_prob := 0.2
 var num_machines : int = PuzzleSettings.get_value("number_of_diggers")
 
@@ -38,6 +57,10 @@ var max_turns := 0
 
 func generate() -> void:
 	PuzzleSettings.apply_difficulty_properties(self)
+	arrow_point_anywhere = PuzzleSettings.get_value("randomize_arrow_directions")
+	if PuzzleSettings.get_value("make_solution_perfect"):
+		add_fake_terrains = false
+		arrow_randomization_prob = 0.0
 	
 	var num_tries := 0
 	var max_tries := 100
@@ -50,6 +73,11 @@ func generate() -> void:
 		if success: break
 
 func create_grid() -> void:
+	# some custom exceptions for extreme cases; ensure grid is large enough
+	if machines.size() >= 5:
+		grid_width_bounds.x = maxi(grid_width_bounds.x, 4)
+		grid_height_bounds.x = maxi(grid_height_bounds.x, 4)
+	
 	# create the basic empty grid
 	var grid_size := Vector2(randi_range(grid_width_bounds.x, grid_width_bounds.y), randi_range(grid_height_bounds.x, grid_height_bounds.y))
 	grid = PuzzleGrid.new()
@@ -109,7 +137,8 @@ func count_machines() -> int:
 	return machines.size()
 
 func get_num_turns_bounds() -> Vector2i:
-	return num_turns_bounds * num_machines
+	var grid_size := grid.cells.size()
+	return Vector2i(floori(0.5*grid_size), floor(grid_size))
 
 func take_turns() -> void:
 	var turns_bounds := get_num_turns_bounds()
@@ -121,8 +150,14 @@ func take_turns() -> void:
 	# (we stagger this to _ensure_ machines have interplay, at least on the first turn they move)
 	var last_active_machine_index := 0
 	var next_machine_turn := randi_range(turns_between_machine_add_bounds.x, turns_between_machine_add_bounds.y)
-	var rand_cell := get_random_cell()
-	rand_cell.add_machine(machines[0])
+	
+	var cells := get_all_cells()
+	if place_all_machines_at_start:
+		cells.shuffle()
+		for machine in machines:
+			cells.pop_back().add_machine(machine)
+	else:
+		cells.pick_random().add_machine(machines[0])
 	
 	# tap random arrows to move the machines around
 	var commands := PuzzleCommands.new()
@@ -136,7 +171,7 @@ func take_turns() -> void:
 		
 		# when it's the right time, and we have machines left to place, place one
 		# @NOTE: we do this BEFORE executing the command to make sure this new machine is moved along with it!
-		if cur_turn == next_machine_turn and last_active_machine_index < (count_machines() - 1):
+		if (not place_all_machines_at_start) and cur_turn == next_machine_turn and last_active_machine_index < (count_machines() - 1):
 			last_active_machine_index += 1
 			place_new_machine(turn_picked.arrow, last_active_machine_index)
 			next_machine_turn += randi_range(turns_between_machine_add_bounds.x, turns_between_machine_add_bounds.y)
@@ -151,7 +186,7 @@ func take_turns() -> void:
 		# place treasure where machines ended up (if we CAN and SHOULD)
 		for machine in turn_picked.cells_targeted_by_machine:
 			var cell := turn_picked.cells_targeted_by_machine[machine]
-			var should_place_treasure := randf() <= treasure_probability
+			var should_place_treasure := randf() <= treasure_probability or machine.turns_since_last_treasure() > 2
 			if cell.can_place_treasure() and should_place_treasure:
 				var new_treasure_num := machine.get_last_treasure_number() + 1
 				cell.add_treasure(new_treasure_num)
@@ -229,6 +264,8 @@ func place_new_machine(arrow:ArrowData, machine_index:int) -> bool:
 	else:
 		rand_cell = cells_valid.pick_random()
 	
+	if not rand_cell: return false
+	
 	rand_cell.add_machine(machines[machine_index])
 	return true
 
@@ -255,25 +292,31 @@ func get_all_valid_turns() -> Array[CommandArrow]:
 	# check for more specific/complicated rules for what to filter out
 	var valid_turns : Array[CommandArrow] = []
 	for command_arrow in all_turns:
+		var is_valid := true
 		for command_move in command_arrow.get_commands():
 			var machine_path := command_move.machine.path
 			var target_cell := command_move.get_target_cell()
 			
 			# this does not allow visiting ANY cell twice (with the same digger
 			if not allow_backtracking and machine_path.has(target_cell):
-				continue
+				is_valid = false
+				break
 			
 			# this does not allow going BACK the way you came (a pointless shuffle usually)
-			if not allow_reversing and machine_path.size() > 0 and machine_path.back() == target_cell:
-				continue
+			if (not allow_reversing) and machine_path.size() > 1 and machine_path[machine_path.size() - 2] == target_cell:
+				is_valid = false
+				break
 			
 			# this ignores arrows that have been used the maximum number of times
 			# (it's NOT the same as enabled/locked as those are game state things)
 			if command_arrow.arrow.num_times_used >= arrow_max_times_used:
-				continue
-			
-			# we're fine, the turn is valid, add it
-			valid_turns.append(command_arrow)
+				is_valid = false
+				break
+		
+		if not is_valid: continue
+		
+		# we're fine, the turn is valid, add it
+		valid_turns.append(command_arrow)
 	
 	valid_turns.shuffle()
 	
@@ -303,9 +346,55 @@ func count_treasure() -> int:
 
 func clean_up(desperate := false) -> bool:
 	# crucial checks that must be fulfilled
+	# > All machines must have been used
 	var machines_unused := machines.filter(func(m:MachineData): return not m.has_been_placed())
 	if machines_unused.size() > 0: 
 		print("PuzzleGenerator | Attempt Discarded | Not all machines used")
+		return false
+	
+	# > Required type unused
+	if terrain_type_required != CellData.TerrainType.NONE:
+		var cells := get_cells_with_type(terrain_type_required)
+		if cells.size() <= 0:
+			print("PuzzleGenerator | Attempt Discarded | A required terrain type was not present")
+			return false
+	
+	# > We can't have too much treasure 
+	# > (looks silly + too few special terrains + makes moves not matter much)
+	# (this does not "fail" our generation, but we need to do it here because later checks require an accurate final treasure count)
+	var num_cells := grid.cells.size()
+	var cells_with_treasure := get_all_cells().filter(func(c:CellData): return c.has_treasure())
+	var num_treasure := cells_with_treasure.size()
+	var too_much_treasure := (num_treasure / float(num_cells)) > treasure_max_ratio
+	if too_much_treasure:
+		var cells_removable := cells_with_treasure.filter(func(c:CellData): return not c.treasure_is_required())
+		cells_removable.shuffle()
+		while too_much_treasure and cells_removable.size() > 0:
+			var cell : CellData = cells_removable.pop_back()
+			cell.remove_treasure()
+			num_treasure -= 1
+			too_much_treasure = (num_treasure / float(num_cells)) > treasure_max_ratio
+	
+	# > Check when treasure is first collected
+	# > So we can figure out if all of it is collected too soon ( = before end of solution)
+	var turn_treasure_collected : Dictionary[CellData, Array] = {}
+	for i in range(solution.size()):
+		var cmd := solution[i] as CommandArrow
+		for cell in cmd.cells_targeted:
+			if not cell.has_treasure(): continue
+			if not (cell in turn_treasure_collected):
+				turn_treasure_collected[cell] = []
+			
+			var is_web := cell.type == CellData.TerrainType.WEB
+			var max_registers := cell.custom_number if is_web else 1
+			if turn_treasure_collected[cell].size() >= max_registers: continue
+			
+			turn_treasure_collected[cell].append(i)
+	
+	var final_moves_collecting_treasure := turn_treasure_collected.keys().filter(func(c:CellData): return turn_treasure_collected[c].back() == (solution.size() - 1))
+	var last_move_collects_treasure := final_moves_collecting_treasure.size() > 0
+	if not last_move_collects_treasure:
+		print("PuzzleGenerator | Attempt Discarded | Last move does not collect gold (and thus part of the solution is likely pointless)")
 		return false
 	
 	# more nice-to-have checks that can be loosened
@@ -315,15 +404,26 @@ func clean_up(desperate := false) -> bool:
 			print("PuzzleGenerator | Attempt Discarded | Not enough turns")
 			return false
 		
-		var last_move_collects_gold : bool = solution.back().cells_targeted.filter(func(c:CellData): return c.has_treasure()).size() > 0
-		if not last_move_collects_gold: 
-			print("PuzzleGenerator | Attempt Discarded | Last move does not collect gold (and is thus likely pointless)")
-			return false
-		
-		var too_little_treasure : bool = count_treasure() < maxi(2, ceili(0.66*count_machines()))
+		var too_little_treasure : bool = num_treasure < maxi(2, ceili(0.66*count_machines()))
 		if too_little_treasure: 
 			print("PuzzleGenerator | Attempt Discarded | Too little treasure placed")
 			return false
+		
+		var machines_moved_enough := true
+		var min_moves := grid.size.x # seems a reasonable lower bound
+		for machine in machines:
+			if machine.path.size() < min_moves:
+				machines_moved_enough = false
+				break
+		if not machines_moved_enough:
+			print("PuzzleGenerator | Attempt Discarded | One or more machines did not move often enough")
+			return false
+		
+		for machine in machines:
+			var final_cell_has_treasure := machine.cell.has_treasure()
+			if not final_cell_has_treasure or (machine.cell.count_visits() > machine.cell.get_max_visits_allowed_for_treasure()):
+				print("PuzzleGenerator | Attempt Discarded | A machine doesn't end on treasure or that treasure will have been captured earlier.")
+				return false
 
 	# put machines back where they started
 	for machine in machines:
@@ -331,13 +431,29 @@ func clean_up(desperate := false) -> bool:
 		machine.path.front().add_machine(machine)
 		machine.set_last_treasure_number(-1)
 	
+	# add "wrong" special cells not needed for the solution
+	# @NOTE: must come before cell reset because that removes history of machines visiting
+	var terrains_that_can_be_fake : Array[CellData.TerrainType] = terrain_types_allowed.duplicate(false)
+	if add_fake_terrains:
+		var regular_cells := get_all_cells().filter(func(c:CellData): return c.can_receive_fake_terrain())
+		for cell in regular_cells:
+			if randf() > fake_terrains_prob: continue
+			terrains_that_can_be_fake.shuffle()
+			for terrain in terrains_that_can_be_fake:
+				var success := terrain_types_library[terrain].generate_fake(self, cell)
+				if success: break
+	
 	# reset cells similarly
 	for cell in get_all_cells():
 		cell.reset_after_generation()
 	
+	# cache how much total treasure there is to collect
+	treasure_total = count_treasure()
+	
 	# set arrow data based on their usage during generation
-	# @TODO: some setting for "randomizing" this, so SOME unneeded arrows are shown and SOME numbers are higher than strictly needed?
 	for arrow in arrows:
+		if randf() <= arrow_randomization_prob:
+			arrow.num_times_used = clampi(arrow.num_times_used + randi_range(arrow_randomization_bounds.x, arrow_randomization_bounds.y), 0, arrow_max_times_used)
 		if remove_all_unused_arrows and not arrow.has_been_used():
 			arrow.set_enabled(false)
 		arrow.calculate_usage_and_reset()

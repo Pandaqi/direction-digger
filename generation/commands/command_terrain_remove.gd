@@ -19,3 +19,6 @@ func undo(_cmds:PuzzleCommands) -> bool:
 func matches(cmd:PuzzleCommand) -> bool:
 	if not (cmd is CommandTerrainRemove): return false
 	return cell == cmd.cell
+
+func is_valid() -> bool:
+	return true

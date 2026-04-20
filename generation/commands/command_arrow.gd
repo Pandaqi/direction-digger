@@ -17,16 +17,25 @@ func do(cmds:PuzzleCommands) -> bool:
 	cells_targeted_by_machine = {}
 	machines_targeted = []
 	
-	for cmd in get_commands():
-		if not cmd.is_valid(): continue
-		
+	var commands_valid : Array[CommandMove] = get_commands().filter(func(c:CommandMove): return c.is_valid())
+	
+	var num_commands_done := 0
+	for cmd in commands_valid:
 		# cache/track some statistics of what we did for generation sanity checks
 		var target_cell := cmd.get_target_cell()
 		cells_targeted.append(target_cell)
 		cells_targeted_by_machine[cmd.machine] = target_cell
 		machines_targeted.append(cmd.machine)
 		
-		await cmds.execute_command(cmd)
+		cmds.execute_command(cmd)
+	
+	# we want moves to happen in PARALLEL, so we don't await them one by one
+	# but catch every move as it finishes and simply count if we're done
+	while (not cmds.generating) and num_commands_done < commands_valid.size():
+		var cmd_finished = await cmds.do_finished
+		if not (cmd_finished is CommandMove): continue
+		if not commands_valid.has(cmd_finished): continue
+		num_commands_done += 1
 	
 	# ice/lava changes are applied AFTER moving everyone
 	# otherwise we get issues with order (sometimes unfreeze comes before frozen machine tries to move, sometimes after, blabla)

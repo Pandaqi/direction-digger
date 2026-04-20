@@ -242,6 +242,30 @@ How do we add this to the algorithm? After creating the solution,
 
 This was definitely the most tricky one to implement. Minor mistakes here lead to completely unsolvable puzzles (because you run out of turns halfway through). Even worse, some moves can move 2 or 3 machines at once, so you can earn _multiple moves_ back ... in one move. I also decided to introduce this one last, because it requires a lot of counting and number knowledge (which young players might not have) and only becomes interesting on big puzzles (with a lot of turns).
 
+## Tweaking, Tweaking, Tweaking
+
+After implementing everything there always comes the time for finding all sorts of tiny bugs and issues and ways that the algorithm can get off track. In the end, I implemented some ~15 extra "checks". They either clean up the puzzle, or discard it because it's "not good enough". (In which case the algorithm just tries again from scratch.)
+
+To give some examples,
+
+* Count the treasure (a _ratio_ of `num_treasure_cells` / `num_total_cells`). If too low, discard. If too high, remove some "optional" treasures ( = those placed along the path, not the final cell of a machine) to get back into range.
+* Check _when_ a cell with treasure is visited for the first time (and thus the treasure collected). If the last move of the puzzle does not collect treasure, then part of the solution is "useless", so discard.
+* Similarly, count how often a machine moves (in total), and how often it moves _between_ collecting treasures.
+  * If a machine moves only once or twice, that's too little, so discard.
+  * If a machine takes too long between treasures, it's likely shuffling aimlessly for a bit. We _could_ allow this, but I just don't like the puzzles that come out of that, so discard.
+* On harder difficulties, introduce "red herrings": fake elements that are not part of the solution to distract the player. This makes the puzzles much harder (because you're not sure which of the arrows/elements you actually need), but also messier and less "pure" (so I made it a setting that you can turn off).
+  * I basically defined a `generate_fake()` function for every terrain type that will randomly pick unused cells (that nobody ever visits in the perfect solution) and turn them into that type.
+  * Some types have extra conditions just to make it a little nicer. For example, too many lava cells makes a puzzle meh (too easy to unfreeze anyone, looks overwhelming), so lava has a lower chance of placing fake versions.
+* The grid size increases with difficulty, but only _horizontally_. The height of the map stays pretty much constant, because the game is in landscape mode (like most screens) and we just don't have that much vertical space.
+  * Also, if you're playing with a _lot_ of machines, it overrides the grid size of your difficulty settings with the minimum it needs just to place everything.
+* Similarly, I initially made a variable `num_turns_per_machine`, and just multiplied that by the number of machines to get the total number of turns this puzzle should have. The problem?
+  * On high difficulties you have this huge map, but if you only have 1 or 2 machines ... then they're basically sticking to a corner and not actually visiting most of the map.
+  * Conversely, on low difficulties and with 4(+) machines, space is too tight and most machines just can't move.
+  * To solve it, I simply made the total number of turns **depend on grid size**, and the average turns we'd want for a machine is just `total / num_machines`. This ensures there are always enough squares to hit that number of turns and visit most of the map with your solution.
+
+And more tiny stuff and bug fixes. Half of which I discovered->researched->fixed so quickly that I don't really remember doing so right now :p
+
+Anyway, they end result is an algorithm that generates nice, balanced, playable, diverse puzzles at all difficulties and settings. The Easiest mode has tiny 3x3 grids that can still support multiple machines and be actually interesting puzzles. The Hardest mode has a much larger grid, all special types enabled, easily fits 6 players/machines, and even adults won't solve those first try.
 
 
 ## Conclusion

@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bfial3l0dn146" path="res://map/arrows/arrow.gd" id="1_v7bl7"]
 [ext_resource type="Texture2D" uid="uid://c03q78cfd1smw" path="res://map/arrows/arrows-spritesheet.png" id="2_0gpvp"]
+[ext_resource type="AudioStream" uid="uid://d3v8u25xskc3a" path="res://puzzle-framework/game/sfx/error.ogg" id="3_0gpvp"]
+[ext_resource type="AudioStream" uid="uid://cch0wwwcrfh4u" path="res://puzzle-framework/game/sfx/lock-unlock.ogg" id="3_s3hi2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v7bl7"]
 size = Vector2(256, 256)
@@ -36,3 +38,9 @@ theme_override_font_sizes/font_size = 64
 text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AudioClick" type="AudioStreamPlayer2D" parent="." unique_id=1832573997]
+stream = ExtResource("3_s3hi2")
+
+[node name="AudioError" type="AudioStreamPlayer2D" parent="." unique_id=1893688672]
+stream = ExtResource("3_0gpvp")

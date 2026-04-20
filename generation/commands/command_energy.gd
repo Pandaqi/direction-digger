@@ -11,3 +11,6 @@ func undo(cmds:PuzzleCommands) -> bool:
 
 func matches(cmd:PuzzleCommand) -> bool:
 	return cmd is CommandEnergy
+
+func is_valid() -> bool:
+	return true

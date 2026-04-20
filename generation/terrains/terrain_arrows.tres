@@ -6,4 +6,5 @@
 script = ExtResource("1_ewhex")
 type = 6
 priority = 3
+can_fake = true
 metadata/_custom_type_script = "uid://c10df51fk1mks"

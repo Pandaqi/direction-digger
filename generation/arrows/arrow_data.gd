@@ -40,7 +40,7 @@ func set_enabled(en:bool) -> void:
 	changed.emit()
 
 func change_times_used(dtu:int) -> void:
-	num_times_used = maxi(dtu, 0)
+	num_times_used = maxi(num_times_used + dtu, 0)
 	changed.emit()
 
 func is_exhausted() -> bool:

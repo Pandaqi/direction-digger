@@ -42,7 +42,10 @@ func has_terrain() -> bool:
 	return type != TerrainType.NONE
 
 func is_special_terrain() -> bool:
-	return not [TerrainType.NONE, TerrainType.REGULAR, TerrainType.REGULAR_ALT].has(type)
+	return not is_default_terrain()
+
+func is_default_terrain() -> bool:
+	return [TerrainType.NONE, TerrainType.REGULAR, TerrainType.REGULAR_ALT].has(type)
 
 func get_terrain() -> TerrainType:
 	return type
@@ -71,7 +74,6 @@ func has_machine_filter() -> bool:
 	return machine_filter != -1
 
 func set_machine_filter(mf:int) -> void:
-	print("Setting machine filter", mf)
 	machine_filter = mf
 	changed.emit()
 
@@ -144,9 +146,19 @@ func remove_treasure() -> void:
 func has_treasure() -> bool:
 	return treasure
 
+func treasure_is_required() -> bool:
+	return is_machine_ending_pos or (type == TerrainType.WEB)
+
+# if it was visited more often than this, then a treasure in this spot will have been collected BEFORE the final move of a machine into it
+func get_max_visits_allowed_for_treasure() -> int:
+	return custom_number if type == CellData.TerrainType.WEB else 1
+
 # @TODO: this must likely be extended once we introduce specific TYPES that the cell can be
 func can_receive_machine() -> bool:
 	return not has_machine() and not has_treasure() and not is_machine_starting_pos
 
 func can_receive_special_terrain() -> bool:
 	return not has_terrain() and not is_machine_starting_pos
+
+func can_receive_fake_terrain() -> bool:
+	return is_default_terrain() and (not is_machine_starting_pos)

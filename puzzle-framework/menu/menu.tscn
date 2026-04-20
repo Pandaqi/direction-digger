@@ -178,7 +178,6 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 
 [node name="Settings" type="Control" parent="CanvasLayer" unique_id=174193722 node_paths=PackedStringArray("settings_container", "settings_heading")]
-visible = false
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -192,8 +191,8 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_pilmq")
-settings_container = NodePath("NinePatchRect/ScrollContainer/MarginContainer/VBoxContainer")
-settings_heading = NodePath("NinePatchRect/ScrollContainer/MarginContainer/VBoxContainer/Heading")
+settings_container = NodePath("NinePatchRect/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer")
+settings_heading = NodePath("NinePatchRect/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/Heading")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/Settings" unique_id=1938900119]
 custom_minimum_size = Vector2(384, 512)
@@ -215,15 +214,20 @@ patch_margin_top = 16
 patch_margin_right = 16
 patch_margin_bottom = 24
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Settings/NinePatchRect" unique_id=2000759910]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Settings/NinePatchRect" unique_id=395169353]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 22
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Settings/NinePatchRect/ScrollContainer" unique_id=874653489]
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Settings/NinePatchRect/MarginContainer" unique_id=2000759910]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Settings/NinePatchRect/MarginContainer/ScrollContainer" unique_id=874653489]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -232,12 +236,12 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Settings/NinePatchRect/ScrollContainer/MarginContainer" unique_id=80683471]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Settings/NinePatchRect/MarginContainer/ScrollContainer/MarginContainer" unique_id=80683471]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Heading" type="Label" parent="CanvasLayer/Settings/NinePatchRect/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1781819245]
+[node name="Heading" type="Label" parent="CanvasLayer/Settings/NinePatchRect/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1781819245]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Settings"

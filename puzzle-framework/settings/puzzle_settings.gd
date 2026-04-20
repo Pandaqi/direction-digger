@@ -18,6 +18,9 @@ static func apply_difficulty_properties(obj) -> void:
 	var diff := get_difficulty()
 	for key in diff.properties:
 		if not (key in obj): continue
+		if typeof(obj[key]) == TYPE_ARRAY:
+			obj[key].assign(diff.properties[key])
+			continue
 		obj[key] = diff.properties[key]
 
 static func has_settings() -> bool:

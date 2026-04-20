@@ -36,3 +36,12 @@ func generate(gen:PuzzleGenerator) -> void:
 		# remember we need to lower the starting value of this arrow
 		for arrow in arrows_to_add:
 			arrow.num_times_modifier -= 1
+
+func generate_fake(gen:PuzzleGenerator, c:CellData) -> bool:
+	var arrows := gen.get_all_arrows_acting_on(c.pos)
+	arrows.shuffle()
+	var rand_num := randi_range(1, arrows.size())
+	
+	c.set_terrain(CellData.TerrainType.ARROWS)
+	c.set_custom_arrows(arrows.slice(0, rand_num))
+	return true

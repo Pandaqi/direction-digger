@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PuzzleSettingHeading" format=3 uid="uid://dd0vnvmg7igdg"]
+
+[ext_resource type="Script" uid="uid://blfklyp54fr6b" path="res://puzzle-framework/settings/setting_heading.gd" id="1_skhlo"]
+
+[resource]
+script = ExtResource("1_skhlo")
+key = "heading_difficulty"
+label = "Difficulty"
+default = null
+metadata/_custom_type_script = "uid://blfklyp54fr6b"

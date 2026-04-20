@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://xurt35vc4xa6"]
+
+[ext_resource type="Texture2D" uid="uid://crm0nybpv13jv" path="res://puzzle-framework/effects/particles/sparkle.png" id="1_jwtug"]
+[ext_resource type="Script" uid="uid://bbv1rrix5da03" path="res://map/particles_treasure.gd" id="2_6jcrh"]
+
+[sub_resource type="Curve" id="Curve_n3o0a"]
+_data = [Vector2(0, 0), 0.0, 10.899474, 0, 0, Vector2(0.087378636, 1), 0.0, 0.0, 0, 0, Vector2(0.48932034, 0.992674), -0.15462673, -0.15462673, 0, 0, Vector2(1, 0), -2.1222527, 0.0, 0, 0]
+point_count = 4
+
+[node name="ParticlesTreasure" type="CPUParticles2D" unique_id=700277322]
+emitting = false
+amount = 32
+texture = ExtResource("1_jwtug")
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.75
+randomness = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(128, 64)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 400.0
+initial_velocity_max = 650.0
+scale_amount_min = 0.5
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_n3o0a")
+script = ExtResource("2_6jcrh")

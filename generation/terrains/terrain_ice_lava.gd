@@ -1,6 +1,8 @@
 extends TerrainData
 class_name TerrainIceLava
 
+@export var debug_print := false
+
 func generate(gen:PuzzleGenerator) -> void:
 	# small helper class to track statistics in a clean (type-checked) way
 	var machine_move_data : Dictionary[MachineData, MachineMoveData] = {}
@@ -46,12 +48,13 @@ func generate(gen:PuzzleGenerator) -> void:
 		cells_visited_so_far += cmd.cells_targeted
 	
 	# debugging: print what our move data tells us
-	for machine in gen.machines:
-		var move_data := machine_move_data[machine]
-		var steps : Array[String] = []
-		for i in range(machine.path.size()):
-			steps.append(str(move_data.get_turn(i)) + ": " + str(machine.path[i].pos))
-		print(" -> ".join(steps))
+	if debug_print:
+		for machine in gen.machines:
+			var move_data := machine_move_data[machine]
+			var steps : Array[String] = []
+			for i in range(machine.path.size()):
+				steps.append(str(move_data.get_turn(i)) + ": " + str(machine.path[i].pos))
+			print(" -> ".join(steps))
 
 func try_lava_placement(
 	turn: int,
@@ -104,4 +107,11 @@ func try_lava_placement(
 	for cell in ice_cells_chosen:
 		cell.set_terrain(CellData.TerrainType.ICE)
 	
+	return true
+
+# we can add lava cells anywhere; ice cells not so much
+func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
+	# we heavily prefer placing lava on unvisited cells
+	if c.has_been_visited() and randf() <= 0.75: return false
+	c.set_terrain(CellData.TerrainType.LAVA)
 	return true

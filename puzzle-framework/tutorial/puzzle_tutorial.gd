@@ -77,8 +77,9 @@ func count_stages() -> int:
 	return stages.size()
 
 func play_audio(a:AudioStream) -> void:
-	audio_player.stream = a
-	audio_player.play()
+	var path_split : PackedStringArray = a.resource_path.split("/")
+	var file_name := path_split[path_split.size() - 1]
+	PuzzleAudio.play_voice(file_name, audio_player)
 
 func _on_puzzle_started() -> void:
 	initialize()
@@ -98,7 +99,7 @@ func goto_next_stage() -> void:
 		finish()
 		return
 	
-	print("Activating current stage", stage_index)
+	print("PuzzleTutorial | Activating Stage ", stage_index)
 	var stage := get_current_stage()
 	stage.activate(self)
 

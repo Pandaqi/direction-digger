@@ -41,6 +41,9 @@ func activate(player_won := false) -> void:
 	
 	anim_player.speed_scale = 1.0
 	
+	var hide_next_button : bool = PuzzleSettings.get_value("disable_hints_and_continue") and not player_won
+	button_next.set_visible(not hide_next_button)
+	
 	anim_player.play("reveal")
 	
 	if player_won: particles.emitting = true

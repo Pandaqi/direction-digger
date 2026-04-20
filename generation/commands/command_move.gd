@@ -3,17 +3,23 @@ class_name CommandMove
 
 var direction : PuzzleGrid.Direction
 var machine : MachineData
+var current_cell : CellData
+var target_cell : CellData
 
 func _init(dir:PuzzleGrid.Direction, m:MachineData):
 	direction = dir
 	machine = m
 
 func do(cmds:PuzzleCommands) -> bool:
-	var cur_cell := machine.cell
-	var new_cell := cur_cell.get_neighbor_at(direction) as CellData
+	current_cell = get_current_cell()
+	target_cell = get_target_cell()
 
-	cur_cell.remove_machine(machine)
-	new_cell.add_machine(machine)
+	current_cell.remove_machine(machine)
+	
+	if cmds.visualizer and (not cmds.generating):
+		await (cmds.visualizer as PuzzleVisualizer).animate_movement(self)
+	
+	target_cell.add_machine(machine)
 	
 	# terrains and treasure and stuff are generated in a forward manner
 	# as such, we DON'T want to actually interact with anything we encounter during generation
@@ -21,25 +27,25 @@ func do(cmds:PuzzleCommands) -> bool:
 	if cmds.generating: return true
 	
 	var remove_terrain := false
-	var web_active := new_cell.terrain_acts_on(machine)
-	if new_cell.type == CellData.TerrainType.WEB and web_active:
-		await cmds.execute_command(CommandWearDown.new(new_cell))
+	var web_active := target_cell.terrain_acts_on(machine)
+	if target_cell.type == CellData.TerrainType.WEB and web_active:
+		await cmds.execute_command(CommandWearDown.new(target_cell))
 	
-	if new_cell.type == CellData.TerrainType.ENERGY:
+	if target_cell.type == CellData.TerrainType.ENERGY:
 		remove_terrain = true
 		await cmds.execute_command(CommandEnergy.new())
 	
-	if new_cell.type == CellData.TerrainType.ARROWS:
+	if target_cell.type == CellData.TerrainType.ARROWS:
 		remove_terrain = true
-		await cmds.execute_command(CommandArrowsChange.new(new_cell))
+		await cmds.execute_command(CommandArrowsChange.new(target_cell))
 	
 	if remove_terrain:
-		await cmds.execute_command(CommandTerrainRemove.new(new_cell))
+		await cmds.execute_command(CommandTerrainRemove.new(target_cell))
 	
-	var should_collect := new_cell.has_treasure()
-	var can_collect := new_cell.can_collect_treasure(machine)
+	var should_collect := target_cell.has_treasure()
+	var can_collect := target_cell.can_collect_treasure(machine)
 	if should_collect and can_collect:
-		await cmds.execute_command(CommandTreasure.new(new_cell))
+		await cmds.execute_command(CommandTreasure.new(target_cell))
 	
 	return true
 
@@ -58,8 +64,8 @@ func get_current_cell() -> CellData:
 
 func is_valid() -> bool:
 	# move would take us off map
-	var current_cell := get_current_cell()
-	var target_cell := get_target_cell()
+	target_cell = get_target_cell()
+	current_cell = get_current_cell()
 	if (not target_cell) or (not current_cell): return false
 	
 	# other machines don't block us if _they_ can move out of the way

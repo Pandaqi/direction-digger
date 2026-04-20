@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://bi2meajfq4oj4"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_xknwp"]
+
+[resource]
+script = ExtResource("1_xknwp")
+key = "disable_hints_and_continue"
+label = "Disable Hints & Continue"
+default = false
+tooltip = "If disabled, players are forced to solve the current puzzle on their own."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

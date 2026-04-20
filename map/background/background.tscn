@@ -1,9 +1,21 @@
 [gd_scene format=3 uid="uid://v2gvc0f1p6r0"]
 
+[ext_resource type="Script" uid="uid://bgoffyiuuypj1" path="res://map/background/background.gd" id="1_uh3jq"]
 [ext_resource type="Texture2D" uid="uid://rxun4lfsf7eh" path="res://map/background/bg-texture.png" id="1_vp6sf"]
 
-[node name="Background" type="CanvasLayer" unique_id=323476670]
+[node name="Background" type="CanvasLayer" unique_id=323476670 node_paths=PackedStringArray("texture_rect")]
 layer = -1
+script = ExtResource("1_uh3jq")
+texture_rect = NodePath("TextureRect")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1542529287]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.20784314, 0.10980392, 0.050980393, 1)
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=818059799]
 anchors_preset = 15

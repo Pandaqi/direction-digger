@@ -7,8 +7,8 @@ class_name TerrainData
 ## probability of picking this terrain when it's a valid option
 @export var prob := 0.33
 
-## min/max numbers of this terrain we need to enfroce
-@export var bounds := Vector2i(1,5)
+## min/max numbers of this terrain we need to enforce
+@export var bounds := Vector2i(2,8)
 
 ## lower = called earlier in generation
 @export var priority := 1
@@ -28,5 +28,8 @@ func get_cells_unvisited(list:Array[CellData]) -> Array[CellData]:
 func get_cells_visited(list:Array[CellData]) -> Array[CellData]:
 	return list.filter(func(c:CellData): return c.has_been_visited())
 
-func generate(gen:PuzzleGenerator) -> void:
+func generate(_gen:PuzzleGenerator) -> void:
 	pass
+
+func generate_fake(_gen:PuzzleGenerator, _cell:CellData) -> bool:
+	return false

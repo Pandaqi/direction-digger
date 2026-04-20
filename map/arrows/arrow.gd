@@ -8,7 +8,7 @@ var data : ArrowData
 @export var label_container : Node2D
 @export var label : Label
 
-
+var prev_number := -1
 var hovering := false
 
 static var direction_to_frame : Dictionary[PuzzleGrid.Direction, int] = {
@@ -30,10 +30,16 @@ func _ready() -> void:
 func _on_input_event(_vp:Node, ev:InputEvent, _sidx:int) -> void:
 	if not (ev is InputEventMouseButton or ev is InputEventScreenTouch): return
 	if ev.is_pressed(): return
-	if not is_enabled(): return
+	if not can_be_clicked(): return
 	clicked.emit()
 
+func can_be_clicked() -> bool:
+	return is_enabled()
+
 func _on_clicked() -> void:
+	animate_change()
+
+func animate_change() -> void:
 	set_scale(Vector2.ONE * 1.2)
 
 func _on_mouse_entered() -> void:
@@ -71,3 +77,5 @@ func _on_data_changed() -> void:
 	if usages_left >= 0:
 		label.show()
 		label.set_text(str(usages_left))
+	if usages_left > prev_number: animate_change()
+	prev_number = usages_left

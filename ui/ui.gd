@@ -15,15 +15,16 @@ func _on_size_changed() -> void:
 	turns_indicator_container.set_position(Vector2(0.5*vp.x, 16 + 0.5 * indicator_size))
 
 func _on_turns_changed(cur_turn:int, max_turns:int) -> void:
+	var cur_indicator_size := indicator_size if max_turns < 15 else (0.5*indicator_size) 
+	
 	# create more if we're lacking
 	while indicators.size() < max_turns:
 		var ind : TurnIndicator = indicator_scene.instantiate()
-		ind.set_size(indicator_size)
 		turns_indicator_container.add_child(ind)
 		indicators.append(ind)
 	
 	# show and reposition them all as needed
-	var ind_offset := -0.5 * (max_turns - 1) * indicator_size * Vector2.RIGHT 
+	var ind_offset := -0.5 * (max_turns - 1) * cur_indicator_size * Vector2.RIGHT
 	for i in range(indicators.size()):
 		var ind := indicators[i]
 		var should_show := i < max_turns
@@ -33,5 +34,6 @@ func _on_turns_changed(cur_turn:int, max_turns:int) -> void:
 		
 		var is_enabled := i <= (max_turns - 1 - cur_turn)
 		ind.show()
+		ind.set_size(cur_indicator_size)
 		ind.set_enabled(is_enabled)
-		ind.set_position(ind_offset + i * indicator_size * Vector2.RIGHT)
+		ind.set_position(ind_offset + i * cur_indicator_size * Vector2.RIGHT)

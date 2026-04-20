@@ -4,6 +4,9 @@ class_name PuzzleCommands
 ## Contains all commands executed on every turn => Array[Array[PuzzleCommand]]
 var history : Array = []
 
+## Contains all commands currently being executed (usually because of await)
+var commands_active : Array[PuzzleCommand] = []
+
 ## True while it's busy doing/undoing commands (which allows you to check if you're able/allowed to make a new action happen or not)
 var busy := false
 
@@ -12,7 +15,6 @@ var busy := false
 
 ## Whether it plays a sound effect upon rewind => @TODO: will probably be extended to a more general "trigger (visual) effects or not" in the future
 @export var play_audio := false
-
 
 ## The "world" of the game, to access for tweening, animations, etc
 ## Generator = underlying raw data; Visualizer = visual interactive version presented to player
@@ -25,6 +27,7 @@ var solution : Array[PuzzleCommand] = []
 ## If we allow giving a hint at any moment, we need to manually track the turn number and set it here too
 var solution_index := -1
 
+signal do_all_finished()
 signal do_started(cmd:PuzzleCommand)
 signal do_finished(cmd:PuzzleCommand)
 signal undo_started(commands:Array[PuzzleCommand])
@@ -53,6 +56,10 @@ func get_current_turn() -> Array[PuzzleCommand]:
 
 func register_command(cmd:PuzzleCommand) -> void:
 	history.back().append(cmd)
+	commands_active.append(cmd)
+
+func register_command_finished(cmd:PuzzleCommand) -> void:
+	commands_active.erase(cmd)
 
 func start_new_turn() -> void:
 	history.append([])
@@ -61,6 +68,8 @@ func delete_last_turn() -> void:
 	history.pop_back()
 
 func execute_command(cmd:PuzzleCommand) -> void:
+	if not cmd.is_valid(): return
+	
 	if cmd.starts_new_turn: start_new_turn()
 	
 	busy = true
@@ -68,8 +77,15 @@ func execute_command(cmd:PuzzleCommand) -> void:
 	
 	register_command(cmd)
 	await cmd.do(self)
-	
+	register_command_finished(cmd)
+
 	do_finished.emit(cmd)
+	
+	# @NOTE: Don't fucking ask me why, but this check only resolves correctly if we do it twice :/ The first one will just not return true even if it is true.
+	var all_commands_done := commands_active.size() <= 0 or commands_active.size() <= 0
+	if not all_commands_done: return
+	
+	do_all_finished.emit()
 	busy = false
 
 func undo_last_turn() -> void:

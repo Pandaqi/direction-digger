@@ -5,4 +5,15 @@
 
 [resource]
 script = ExtResource("1_gnrw5")
+properties = Dictionary[String, Variant]({
+"add_fake_terrains": false,
+"allow_backtracking": false,
+"arrow_max_times_used": 1,
+"arrow_randomization_prob": 0.0,
+"forbid_terrains_for_treasure": true,
+"grid_height_bounds": Vector2i(3, 3),
+"grid_width_bounds": Vector2i(3, 3),
+"num_turns_bounds": Vector2i(2, 4),
+"terrain_types_allowed": []
+})
 metadata/_custom_type_script = "uid://7a03fervi8xj"

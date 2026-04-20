@@ -6,4 +6,5 @@
 script = ExtResource("1_u4cba")
 type = 7
 priority = 4
+can_fake = true
 metadata/_custom_type_script = "uid://sophp81jf0ca"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PuzzleSettingHeading" format=3 uid="uid://ce0nrt13oqsoa"]
+
+[ext_resource type="Script" uid="uid://blfklyp54fr6b" path="res://puzzle-framework/settings/setting_heading.gd" id="1_itnsa"]
+
+[resource]
+script = ExtResource("1_itnsa")
+key = "heading_core"
+label = "Core"
+default = null
+metadata/_custom_type_script = "uid://blfklyp54fr6b"

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PuzzleDifficulty" format=3 uid="uid://dbdo730n5lfbi"]
+
+[ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="1_ke675"]
+[ext_resource type="Script" uid="uid://dbnf0revlghrs" path="res://puzzle-framework/tutorial/puzzle_tutorial_stage.gd" id="2_w63go"]
+
+[resource]
+script = ExtResource("1_ke675")
+difficulty = 3
+properties = Dictionary[String, Variant]({
+"add_fake_terrains": true,
+"allow_backtracking": true,
+"arrow_max_times_used": 2,
+"arrow_randomization_prob": 0.15,
+"forbid_terrains_for_treasure": false,
+"grid_height_bounds": Vector2i(4, 4),
+"grid_width_bounds": Vector2i(5, 6),
+"num_turns_bounds": Vector2i(4, 6),
+"terrain_type_required": 5,
+"terrain_types_allowed": [3, 8, 5]
+})
+metadata/_custom_type_script = "uid://7a03fervi8xj"

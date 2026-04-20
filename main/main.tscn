@@ -8,24 +8,53 @@
 [ext_resource type="Script" uid="uid://haho73xq30yv" path="res://puzzle-framework/tools/camera.gd" id="4_c651c"]
 [ext_resource type="PackedScene" uid="uid://2xygcypttdo7" path="res://puzzle-framework/game/game_menu.tscn" id="6_4dugh"]
 [ext_resource type="Script" uid="uid://drjxhvpd62vyp" path="res://ui/ui.gd" id="6_67ri8"]
+[ext_resource type="AudioStream" uid="uid://cch0wwwcrfh4u" path="res://puzzle-framework/game/sfx/lock-unlock.ogg" id="6_fwcvl"]
 [ext_resource type="PackedScene" uid="uid://q1jom8bphw8d" path="res://puzzle-framework/gameover/game_over_dialog.tscn" id="7_67ri8"]
+[ext_resource type="AudioStream" uid="uid://d3v8u25xskc3a" path="res://puzzle-framework/game/sfx/error.ogg" id="7_na0o7"]
 [ext_resource type="PackedScene" uid="uid://d23ojjwoswajr" path="res://ui/turn_indicators/turn_indicator.tscn" id="8_0i4oc"]
+[ext_resource type="AudioStream" uid="uid://c22atrntt5mds" path="res://puzzle-framework/game/sfx/positive_1.ogg" id="8_na0o7"]
+[ext_resource type="PackedScene" uid="uid://xurt35vc4xa6" path="res://map/particles_treasure.tscn" id="10_5xyti"]
+[ext_resource type="PackedScene" uid="uid://d23x83jafdix7" path="res://map/machines/machine.tscn" id="14_73k8k"]
 
-[node name="Main" type="Node2D" unique_id=1559668950 node_paths=PackedStringArray("vis", "cam", "ui")]
+[node name="Main" type="Node2D" unique_id=1559668950 node_paths=PackedStringArray("background", "vis", "cam", "ui")]
 script = ExtResource("1_53q0u")
+background = NodePath("Background")
 vis = NodePath("PuzzleVisualizer")
 cam = NodePath("PuzzleCamera")
 ui = NodePath("UI")
 
 [node name="Background" parent="." unique_id=323476670 instance=ExtResource("2_grrlh")]
 
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761]
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761 node_paths=PackedStringArray("machine_copies_container", "audio_arrow_click", "audio_arrow_fail", "audio_treasure")]
 script = ExtResource("2_pjrb6")
 arrow_scene = ExtResource("3_xwkvk")
 cell_scene = ExtResource("4_3wy1v")
+machine_copies_container = NodePath("MachineCopies")
+machine_scene = ExtResource("14_73k8k")
+audio_arrow_click = NodePath("Audio/AudioArrowClick")
+audio_arrow_fail = NodePath("Audio/AudioArrowFail")
+audio_treasure = NodePath("Audio/AudioTreasure")
+particles_treasure_scene = ExtResource("10_5xyti")
+
+[node name="Audio" type="Node2D" parent="PuzzleVisualizer" unique_id=358806757]
+
+[node name="AudioArrowClick" type="AudioStreamPlayer2D" parent="PuzzleVisualizer/Audio" unique_id=1993920032]
+position = Vector2(643, 384)
+stream = ExtResource("6_fwcvl")
+
+[node name="AudioArrowFail" type="AudioStreamPlayer2D" parent="PuzzleVisualizer/Audio" unique_id=914039325]
+position = Vector2(643, 384)
+stream = ExtResource("7_na0o7")
+
+[node name="AudioTreasure" type="AudioStreamPlayer2D" parent="PuzzleVisualizer/Audio" unique_id=1415815010]
+position = Vector2(643, 384)
+stream = ExtResource("8_na0o7")
+
+[node name="MachineCopies" type="Node2D" parent="PuzzleVisualizer" unique_id=1631631787]
+z_index = 1024
 
 [node name="PuzzleCamera" type="Camera2D" parent="." unique_id=280949759]
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(0.33, 0.33)
 script = ExtResource("4_c651c")
 edge_margin = Vector2(32, 160)
 metadata/_custom_type_script = "uid://haho73xq30yv"

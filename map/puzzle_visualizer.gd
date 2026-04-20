@@ -11,9 +11,20 @@ var arrows : Array[Arrow]
 @export var cell_scene : PackedScene
 var cells : Array[Cell]
 
+@export var machine_copies_container : Node2D
+@export var machine_scene : PackedScene
+var machines : Array[Machine] = []
+
+@export var audio_arrow_click : AudioStreamPlayer2D
+@export var audio_arrow_fail : AudioStreamPlayer2D
+@export var audio_treasure : AudioStreamPlayer2D
+
+@export var particles_treasure_scene : PackedScene
+
 var turn := -1
 
 signal turns_changed(cur_turn:int, max_turns:int)
+signal treasure_collected(tres_left:int, tres_total:int)
 
 static var cell_size := Vector2(256, 256)
 
@@ -31,6 +42,14 @@ func visualize(gen:PuzzleGenerator) -> void:
 	for cell in generator.grid.get_cells():
 		place_cell(cell)
 	
+	# prepare copies for all machines
+	for machine_data in generator.machines:
+		var machine : Machine = machine_scene.instantiate()
+		machine.sync_to_data(machine_data)
+		machine_copies_container.add_child(machine)
+		machines.append(machine)
+		machine.reset()
+	
 	commands = PuzzleCommands.new()
 	commands.prepare_for_play(self)
 	commands.set_solution(generator.solution)
@@ -39,7 +58,32 @@ func visualize(gen:PuzzleGenerator) -> void:
 	commands.undo_finished.connect(_on_undo_finished)
 	
 	set_turn(0)
+	on_treasures_changed()
 	PuzzleFramework.start_puzzle()
+
+func animate_movement(cmd:CommandMove) -> void:
+	var machine := machines[cmd.machine.index]
+	var current_cell := cmd.current_cell
+	var target_cell := cmd.target_cell
+	var current_pos := convert_grid_pos_to_real_pos(current_cell.pos)
+	var target_pos := convert_grid_pos_to_real_pos(target_cell.pos)
+	
+	machine.set_position(current_pos)
+	machine.play_digging_animation()
+	
+	var dur := 0.25
+	var tw := get_tree().create_tween()
+	tw.tween_property(machine, "position", target_pos, dur)
+	tw.tween_callback(machine.stop_digging_animation)
+	await tw.finished
+
+func on_treasures_changed(cell:CellData = null) -> void:
+	if cell:
+		PuzzleAudio.play_audio_nice(audio_treasure)
+		var p : ParticlesTreasure = particles_treasure_scene.instantiate()
+		p.set_position(convert_grid_pos_to_real_pos(cell.pos))
+		add_child(p)
+	treasure_collected.emit(generator.count_treasure(), generator.treasure_total)
 
 func refresh_turn() -> void:
 	set_turn(commands.count())
@@ -90,19 +134,30 @@ func place_arrow(idx:int, loc:PuzzleGrid.Direction, ad:ArrowData) -> void:
 	arrow.sync_to_data(ad)
 	
 	arrow.clicked.connect(_on_arrow_clicked, CONNECT_APPEND_SOURCE_OBJECT)
+	arrow.hovered.connect(_on_arrow_hovered, CONNECT_APPEND_SOURCE_OBJECT)
 
 func _on_arrow_clicked(a:Arrow) -> void:
 	execute_arrow(a.data)
 
-func execute_arrow(ad:ArrowData) -> void:
-	if commands.is_busy(): return
+func play_click_sound(volume := 0.0) -> void:
+	audio_arrow_click.volume_db = volume
+	PuzzleAudio.play_audio_nice(audio_arrow_click)
+
+func _on_arrow_hovered(hovering:bool, a:Arrow) -> void:
+	if hovering and a.can_be_clicked(): 
+		play_click_sound(-6.0)
+
+func execute_arrow(ad:ArrowData) -> bool:
+	if commands.is_busy(): return false
 	
 	var cmd := CommandArrow.new(ad)
 	if not cmd.is_valid():
-		print("Invalid Turn!") # @TODO: give more feedback about this?
-		return
+		PuzzleAudio.play_audio_nice(audio_arrow_fail)
+		return false
 	
-	await commands.execute_command(cmd)
+	play_click_sound()
+	commands.execute_command(cmd)
+	return true
 
 func _input(ev:InputEvent) -> void:
 	check_for_hotkeys(ev)

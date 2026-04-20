@@ -30,8 +30,8 @@ func _ready() -> void:
 	
 	if not allow_back: button_back.hide()
 	if not allow_undo: button_undo.hide()
-	if not allow_next: button_next.hide()
-	if not allow_hint: button_hint.hide()
+	if (not allow_next) or PuzzleSettings.get_value("disable_hints_and_continue"): button_next.hide()
+	if (not allow_hint) or PuzzleSettings.get_value("disable_hints_and_continue"): button_hint.hide()
 	if not allow_restart: button_restart.hide()
 	
 	container.custom_minimum_size.y = size

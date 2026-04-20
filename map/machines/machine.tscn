@@ -2,10 +2,115 @@
 
 [ext_resource type="Script" uid="uid://bk4w5tk3awoj0" path="res://map/machines/machine.gd" id="1_yc1m4"]
 [ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_ma0n7"]
+[ext_resource type="AudioStream" uid="uid://b8hg265ojc52a" path="res://map/machines/audio/digging-1.ogg" id="3_iwv4m"]
+[ext_resource type="AudioStream" uid="uid://4at2nbuvqc2y" path="res://map/machines/audio/digging-2.ogg" id="4_yobmb"]
+[ext_resource type="AudioStream" uid="uid://js1bacgl3j5s" path="res://map/machines/audio/digging-3.ogg" id="5_8deq7"]
+[ext_resource type="AudioStream" uid="uid://dvw3ik42l5diu" path="res://map/machines/audio/digging-4.ogg" id="6_xcvk4"]
+[ext_resource type="AudioStream" uid="uid://brjbnolqfg68i" path="res://map/machines/audio/digging-5.ogg" id="7_5hv1a"]
+[ext_resource type="AudioStream" uid="uid://is6yb5c0sw0m" path="res://map/machines/audio/digging-6.ogg" id="8_8k56c"]
+[ext_resource type="AudioStream" uid="uid://c8mdei68x4aj1" path="res://map/machines/audio/digging-7.ogg" id="9_kj7bc"]
+[ext_resource type="Texture2D" uid="uid://dbl1xuan7n3h5" path="res://puzzle-framework/gameover/circle-particle.png" id="10_yobmb"]
 
-[node name="Machine" type="Node2D" unique_id=378872610 node_paths=PackedStringArray("sprite")]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_l3p15"]
+streams_count = 7
+stream_0/stream = ExtResource("3_iwv4m")
+stream_1/stream = ExtResource("4_yobmb")
+stream_2/stream = ExtResource("5_8deq7")
+stream_3/stream = ExtResource("6_xcvk4")
+stream_4/stream = ExtResource("7_5hv1a")
+stream_5/stream = ExtResource("8_8k56c")
+stream_6/stream = ExtResource("9_kj7bc")
+
+[sub_resource type="Animation" id="Animation_iwv4m"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_yobmb"]
+resource_name = "dig"
+length = 0.25
+loop_mode = 1
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-8, -8), Vector2(6, 6), Vector2(8, -8), Vector2(-10, 10), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8deq7"]
+_data = {
+&"RESET": SubResource("Animation_iwv4m"),
+&"dig": SubResource("Animation_yobmb")
+}
+
+[sub_resource type="Curve" id="Curve_yobmb"]
+_data = [Vector2(0.011650484, 0.1098901), 0.0, 0.0, 0, 0, Vector2(0.09320389, 0.6520147), 0.0, 0.0, 0, 0, Vector2(0.26796114, 1), 0.0, 0.0, 0, 0, Vector2(0.72233003, 0.5531136), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Gradient" id="Gradient_yobmb"]
+offsets = PackedFloat32Array(0, 0.53630704, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_8deq7"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Machine" type="Node2D" unique_id=378872610 node_paths=PackedStringArray("visuals", "sprite", "anim_player", "audio_digging", "particles_digging")]
 script = ExtResource("1_yc1m4")
-sprite = NodePath("Sprite2D")
+visuals = NodePath("Visuals")
+sprite = NodePath("Visuals/Sprite2D")
+anim_player = NodePath("AnimationPlayer")
+audio_digging = NodePath("AudioDigging")
+particles_digging = NodePath("ParticlesDigging")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1220706974]
+[node name="Visuals" type="Node2D" parent="." unique_id=1604246742]
+
+[node name="Sprite2D" type="Sprite2D" parent="Visuals" unique_id=1220706974]
 texture = ExtResource("2_ma0n7")
+
+[node name="AudioDigging" type="AudioStreamPlayer2D" parent="." unique_id=1755366343]
+stream = SubResource("AudioStreamRandomizer_l3p15")
+max_distance = 6000.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1108820620]
+libraries/ = SubResource("AnimationLibrary_8deq7")
+
+[node name="ParticlesDigging" type="CPUParticles2D" parent="." unique_id=233417222]
+emitting = false
+amount = 48
+texture = ExtResource("10_yobmb")
+lifetime = 0.5
+explosiveness = 0.4
+randomness = 0.4
+emission_shape = 3
+emission_rect_extents = Vector2(128, 128)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+scale_amount_min = 0.15
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_yobmb")
+color = Color(0.572102, 0.36486688, 0.20329267, 1)
+color_ramp = SubResource("Gradient_yobmb")
+hue_variation_min = -0.06
+hue_variation_max = 0.06
+hue_variation_curve = SubResource("Curve_8deq7")

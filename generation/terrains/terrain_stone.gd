@@ -13,3 +13,8 @@ func generate(gen:PuzzleGenerator) -> void:
 	for cell in elems_visited_by_one:
 		cell.set_terrain(CellData.TerrainType.STONE)
 		cell.set_machine_filter(cell.get_machine_indices().front())
+
+func generate_fake(_gen:PuzzleGenerator, c:CellData) -> bool:
+	if c.has_been_visited(): return false
+	c.set_terrain(CellData.TerrainType.STONE)
+	return true
