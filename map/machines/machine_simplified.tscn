@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b01036ulp0fuv"]
+
+[ext_resource type="Script" uid="uid://bk4w5tk3awoj0" path="res://map/machines/machine.gd" id="1_houxv"]
+[ext_resource type="Texture2D" uid="uid://c11u5yxouuiug" path="res://map/machines/digger-body.png" id="2_keg0w"]
+
+[node name="MachineSimplified" type="Node2D" unique_id=1549266914 node_paths=PackedStringArray("visuals", "sprite", "anim_player", "audio_digging", "particles_digging")]
+script = ExtResource("1_houxv")
+visuals = NodePath("Visuals")
+sprite = NodePath("Visuals/Body")
+anim_player = NodePath("")
+audio_digging = NodePath("")
+particles_digging = NodePath("")
+
+[node name="Visuals" type="Node2D" parent="." unique_id=1210050771]
+
+[node name="Body" type="Sprite2D" parent="Visuals" unique_id=1344676105]
+texture = ExtResource("2_keg0w")

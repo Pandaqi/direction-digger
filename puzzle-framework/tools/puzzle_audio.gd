@@ -72,14 +72,17 @@ func load_background_music(bg_music:Array[AudioStream]) -> void:
 func get_fallback_audio_player() -> AudioStreamPlayer:
 	return state_audio
 
-static func get_voice_over(path:String) -> AudioStream:
+static func get_voice_over(path:String, subdir := "") -> AudioStream:
 	var voice_type : String = PuzzleSettings.get_value("voice_type")
 	if not voice_type or voice_type == "none": return null
+	if subdir == "": subdir = PuzzleFramework.voice_over_root 
 	
-	var full_path : String = "res://" + PuzzleFramework.voice_over_root + "/" + voice_type + "/" + path
+	var full_path : String = "res://" + subdir + "/" + voice_type + "/" + path
 	return load(full_path)
 
-static func play_voice(path_to_audio:String, ap:AudioStreamPlayer = null) -> void:
+static func play_voice(path_to_audio:String, ap:AudioStreamPlayer = null, subdir := "") -> void:
 	if not ap: ap = PuzzleFramework.audio.get_fallback_audio_player()
-	ap.stream = get_voice_over(path_to_audio)
+	var stream := get_voice_over(path_to_audio, subdir)
+	if not stream: return
+	ap.stream = stream
 	ap.play()

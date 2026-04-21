@@ -51,11 +51,14 @@ func _on_mouse_exited() -> void:
 	hovered.emit(false)
 
 func _physics_process(dt:float) -> void:
+	var update_speed := 10.0 * dt
+	update_speed *= PuzzleSettings.get_value("animation_speed")
+	
 	var target_scale := Vector2.ONE if (hovering and is_enabled()) else Vector2(0.8, 0.8)
-	set_scale(get_scale().lerp(target_scale, 10*dt))
+	set_scale(get_scale().lerp(target_scale, update_speed))
 	
 	var target_alpha := 1.0 if is_enabled() else 0.1
-	modulate.a = lerpf(modulate.a, target_alpha, 10*dt)
+	modulate.a = lerpf(modulate.a, target_alpha, update_speed)
 
 func is_enabled() -> bool:
 	return data.is_usable()

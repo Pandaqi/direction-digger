@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://d2wsjwrrxx3wc" path="res://map/cells/cell.gd" id="1_kshm1"]
 [ext_resource type="PackedScene" uid="uid://yvlk0xtxggca" path="res://map/cells/sprite_terrain.tscn" id="2_n6jdi"]
 [ext_resource type="Material" uid="uid://diyvhknr75s2s" path="res://map/cells/treasure_blend_material.tres" id="3_glfqj"]
-[ext_resource type="PackedScene" uid="uid://d23x83jafdix7" path="res://map/machines/machine.tscn" id="3_n6jdi"]
 [ext_resource type="Shader" uid="uid://ch0ujsn6u3x0n" path="res://map/cells/terrain_dissolve_shader.gdshader" id="4_hnh3j"]
 [ext_resource type="PackedScene" uid="uid://invbag5uje1d" path="res://map/arrows/arrow_simplified.tscn" id="4_n6jdi"]
 [ext_resource type="Shader" uid="uid://ceg2wu0qgmgb3" path="res://puzzle-framework/effects/shaders/shine_animated.gdshader" id="5_0026a"]
+[ext_resource type="PackedScene" uid="uid://b01036ulp0fuv" path="res://map/machines/machine_simplified.tscn" id="8_hnh3j"]
 [ext_resource type="Texture2D" uid="uid://34vhrl08tuv7" path="res://map/cells/terrain-gold.png" id="8_s0dps"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_1ybbl"]
@@ -40,7 +40,7 @@ sprite_terrain = NodePath("SpriteTerrain")
 sprite_treasure = NodePath("SpriteTreasure")
 sprite_treasure_shine = NodePath("SpriteTreasure/SpriteTreasureShine")
 label_treasure = NodePath("Label")
-machine = NodePath("Machine")
+machine = NodePath("MachineSimplified")
 arrows_container = NodePath("ArrowsContainer")
 arrow_scene = ExtResource("4_n6jdi")
 
@@ -77,6 +77,6 @@ vertical_alignment = 1
 
 [node name="ArrowsContainer" type="Node2D" parent="." unique_id=428793239]
 
-[node name="Machine" parent="." unique_id=378872610 instance=ExtResource("3_n6jdi")]
+[node name="MachineSimplified" parent="." unique_id=1549266914 instance=ExtResource("8_hnh3j")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=18476158]

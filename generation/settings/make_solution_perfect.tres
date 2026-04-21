@@ -6,6 +6,6 @@
 script = ExtResource("1_icyuc")
 key = "make_solution_perfect"
 label = "Make Solution Perfect"
-default = false
+default = true
 tooltip = "A perfect solution means every arrow and special tile shown is used (no fakes that do nothing to distract you)."
 metadata/_custom_type_script = "uid://dhfd6mahjlglv"

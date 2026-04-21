@@ -1,26 +1,5 @@
 # Direction Digger
 
-## To-Do
-
-**OTHER**:
-
-* Tutorial: Images
-* (Puzzle Generation: Make it faster / more likely to succeed with high number of machines => Sometimes still breaks???)
-
-
-**DIGGER:** One digger that's tintable and matches the style of the rest.
-* Wheels are separate and animated
-* Digging drill is separate and animated
-* **In cells, the digger is just a single sprite**
-* **When moving, the wheel/drill "pop out" and that fake digger overlay actually animates and moves where it should go.**
-
-
-
-
-
-
-
-
 
 ## Future To-Do / Optional
 
@@ -28,17 +7,11 @@ GENERATION: Already decide some arrows are brittle/limited _during generation_, 
 
 Consider an alternative OBJECTIVE of **clearing the whole screen** ("visiting every cell at least once").
 
+Puzzle Generation: Make it faster / more likely to succeed with high number of machines
 
+Visuals: Diggers could be slightly more in same style as the rest, but that's hard to do with the modulation active ...
 
-## PuzzleFramework (THIS IS LATEST VERSION NOW)
-
-* Allow setting the _scale_ of the `give_feedback` node (and other UI elements??)
-* Create some reusable module for "react to click + hover on area" as I'm retyping that code again and again now ...
-  * Yes, an `Area2D` that sends these signals, plus a `set_size` function for dynamic resizing of collision shape that I often do (and an `@export` variable to set this from editor manually)
-* SOME WAY TO TRACK/SAVE PROGRESS? Like "how far did the player get?" or "what's the highest difficulty they solved?" or "how long does it take them on average to solve these puzzles (in terms of time/turns)?"
-
-
-**@IDEA/@IMPROV: If we ever want to support "campaigns",** I could just save the seed + some crucial detail (like machine starting pos). I can then run a debug tool to just check if that crucial detail is still the same in all generated puzzles, protecting against accidental changes in earlier campaign puzzles.
+Background Music
 
 
 # Difficulties

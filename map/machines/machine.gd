@@ -10,8 +10,9 @@ var data : MachineData
 @export var particles_digging : CPUParticles2D
 
 func _ready() -> void:
-	audio_digging.bus = "Game"
-	particles_digging.set_emitting(false)
+	set_scale(Vector2.ONE*0.8)
+	if audio_digging: audio_digging.bus = "Game"
+	if particles_digging: particles_digging.set_emitting(false)
 
 func reset() -> void:
 	visuals.hide()
@@ -22,13 +23,17 @@ func sync_to_data(md:MachineData) -> void:
 	_on_data_changed()
 
 func _on_data_changed() -> void:
-	#sprite.set_frame(data.index)
-	visuals.modulate = MachineData.colors[data.index]
+	sprite.modulate = MachineData.colors[data.index]
+	set_rotation(data.last_movement_vector.angle())
 
-func play_digging_animation() -> void:
+func play_digging_animation(vec:Vector2) -> void:
 	visuals.show()
 	audio_digging.play()
+	anim_player.speed_scale = PuzzleSettings.get_value("animation_speed")
 	anim_player.play("dig")
+	
+	set_rotation(vec.angle())
+	data.last_movement_vector = vec.normalized()
 	
 	if not PuzzleSettings.get_value("disable_visual_effects"):
 		particles_digging.set_emitting(true)

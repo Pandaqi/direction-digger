@@ -2,10 +2,12 @@
 
 [ext_resource type="AudioStream" uid="uid://b3jmapatv8xvx" path="res://ui/tutorial/audio/female/tut-easiest.ogg" id="1_3k7d3"]
 [ext_resource type="Script" uid="uid://dbnf0revlghrs" path="res://puzzle-framework/tutorial/puzzle_tutorial_stage.gd" id="1_mrcgj"]
+[ext_resource type="Texture2D" uid="uid://nr7nu3pb4fcy" path="res://ui/tutorial/images/tut-easiest.png" id="2_pi3sl"]
 
 [resource]
 script = ExtResource("1_mrcgj")
 audio = ExtResource("1_3k7d3")
+image_background = ExtResource("2_pi3sl")
 object_focus_index = 0
 object_focus_is_pointer = true
 metadata/_custom_type_script = "uid://dbnf0revlghrs"

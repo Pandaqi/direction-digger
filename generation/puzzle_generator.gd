@@ -23,14 +23,16 @@ var terrain_type_required := CellData.TerrainType.NONE
 
 #endregion
 
+# @NOTE: `load()` and not `preload()` because of cyclic dependency errors that only show up on exported builds => https://github.com/godotengine/godot/issues/100100
+# REMINDER TO SELF: Do this in a cleaner way in future projects then
 static var terrain_types_library : Dictionary[CellData.TerrainType, TerrainData] = {
-	CellData.TerrainType.NONE: preload("res://generation/terrains/terrain_default.tres"),
-	CellData.TerrainType.STONE: preload("res://generation/terrains/terrain_stone.tres"),
-	CellData.TerrainType.WEB: preload("res://generation/terrains/terrain_web.tres"),
-	CellData.TerrainType.ENERGY: preload("res://generation/terrains/terrain_energy.tres"),
-	CellData.TerrainType.ICE: preload("res://generation/terrains/terrain_ice_lava.tres"),
-	CellData.TerrainType.LAVA: preload("res://generation/terrains/terrain_ice_lava.tres"),
-	CellData.TerrainType.ARROWS: preload("res://generation/terrains/terrain_arrows.tres"),
+	CellData.TerrainType.NONE: load("res://generation/terrains/terrain_default.tres"),
+	CellData.TerrainType.STONE: load("res://generation/terrains/terrain_stone.tres"),
+	CellData.TerrainType.WEB: load("res://generation/terrains/terrain_web.tres"),
+	CellData.TerrainType.ENERGY: load("res://generation/terrains/terrain_energy.tres"),
+	CellData.TerrainType.ICE: load("res://generation/terrains/terrain_ice_lava.tres"),
+	CellData.TerrainType.LAVA: load("res://generation/terrains/terrain_ice_lava.tres"),
+	CellData.TerrainType.ARROWS: load("res://generation/terrains/terrain_arrows.tres"),
 }
 
 var allow_reversing := false

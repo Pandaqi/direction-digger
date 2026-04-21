@@ -27,7 +27,7 @@ ui = NodePath("UI")
 
 [node name="Background" parent="." unique_id=323476670 instance=ExtResource("2_grrlh")]
 
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761 node_paths=PackedStringArray("machine_copies_container", "audio_arrow_click", "audio_arrow_fail", "audio_treasure", "audio_custom")]
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=596338761 node_paths=PackedStringArray("machine_copies_container", "audio_arrow_click", "audio_arrow_fail", "audio_treasure", "audio_custom", "audio_directions")]
 script = ExtResource("2_pjrb6")
 arrow_scene = ExtResource("3_xwkvk")
 cell_scene = ExtResource("4_3wy1v")
@@ -37,6 +37,7 @@ audio_arrow_click = NodePath("Audio/AudioArrowClick")
 audio_arrow_fail = NodePath("Audio/AudioArrowFail")
 audio_treasure = NodePath("Audio/AudioTreasure")
 audio_custom = NodePath("Audio/AudioCustom")
+audio_directions = NodePath("Audio/AudioDirections")
 particles_treasure_scene = ExtResource("10_5xyti")
 
 [node name="Audio" type="Node2D" parent="PuzzleVisualizer" unique_id=358806757]
@@ -55,6 +56,8 @@ stream = ExtResource("8_na0o7")
 volume_db = -3.0
 
 [node name="AudioCustom" type="AudioStreamPlayer2D" parent="PuzzleVisualizer/Audio" unique_id=2056685595]
+
+[node name="AudioDirections" type="AudioStreamPlayer" parent="PuzzleVisualizer/Audio" unique_id=1321859813]
 
 [node name="MachineCopies" type="Node2D" parent="PuzzleVisualizer" unique_id=1631631787]
 z_index = 1024
@@ -81,5 +84,8 @@ allow_undo = true
 
 [node name="PuzzleTutorial" type="CanvasLayer" parent="." unique_id=303490570 node_paths=PackedStringArray("container_2d")]
 script = ExtResource("16_n3o0a")
+background_anchor = Vector2(0.075, 0.5)
+background_scale = 0.25
+background_modulate = Color(1, 1, 1, 0.81960785)
 container_2d = NodePath("../PuzzleVisualizer")
 metadata/_custom_type_script = "uid://dpg60n5rlnn4j"

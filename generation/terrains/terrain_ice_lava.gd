@@ -3,8 +3,8 @@ class_name TerrainIceLava
 
 @export var debug_print := false
 
-var audio_lava : AudioStream = preload("res://generation/terrains/ice-break-melt.ogg")
-var audio_freeze := preload("res://generation/terrains/ice-freeze.ogg")
+var audio_lava : AudioStream = load("res://generation/terrains/ice-break-melt.ogg")
+var audio_freeze : AudioStream = load("res://generation/terrains/ice-freeze.ogg")
 
 func generate(gen:PuzzleGenerator) -> void:
 	# small helper class to track statistics in a clean (type-checked) way

@@ -19,10 +19,18 @@ var machines : Array[Machine] = []
 @export var audio_arrow_fail : AudioStreamPlayer2D
 @export var audio_treasure : AudioStreamPlayer2D
 @export var audio_custom : AudioStreamPlayer2D
+@export var audio_directions : AudioStreamPlayer
 
 @export var particles_treasure_scene : PackedScene
 
 var turn := -1
+
+var dirs_to_audio : Dictionary[PuzzleGrid.Direction, String] = {
+	PuzzleGrid.Direction.LEFT: "direction-left",
+	PuzzleGrid.Direction.RIGHT: "direction-right",
+	PuzzleGrid.Direction.UP: "direction-up",
+	PuzzleGrid.Direction.DOWN: "direction-down",
+}
 
 signal turns_changed(cur_turn:int, max_turns:int)
 signal treasure_collected(tres_left:int, tres_total:int)
@@ -71,9 +79,9 @@ func animate_movement(cmd:CommandMove) -> void:
 	var target_pos := convert_grid_pos_to_real_pos(target_cell.pos)
 	
 	machine.set_position(current_pos)
-	machine.play_digging_animation()
+	machine.play_digging_animation(target_pos - current_pos)
 	
-	var dur := 0.25
+	var dur : float = 0.25 / PuzzleSettings.get_value("animation_speed")
 	var tw := get_tree().create_tween()
 	tw.tween_property(machine, "position", target_pos, dur)
 	tw.tween_callback(machine.stop_digging_animation)
@@ -157,6 +165,10 @@ func _on_arrow_hovered(hovering:bool, a:Arrow) -> void:
 	if hovering and a.can_be_clicked(): 
 		play_click_sound(-6.0)
 
+func play_direction_audio(ad:ArrowData) -> void:
+	var dir_key := dirs_to_audio[ad.direction]
+	PuzzleAudio.play_voice(dir_key + ".ogg", audio_directions, "ui/tutorial/directions")
+
 func execute_arrow(ad:ArrowData) -> bool:
 	if commands.is_busy(): return false
 	
@@ -165,6 +177,7 @@ func execute_arrow(ad:ArrowData) -> bool:
 		PuzzleAudio.play_audio_nice(audio_arrow_fail)
 		return false
 	
+	play_direction_audio(ad)
 	play_click_sound()
 	commands.execute_command(cmd)
 	return true

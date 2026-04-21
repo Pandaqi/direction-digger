@@ -30,7 +30,7 @@ func _on_data_changed() -> void:
 	var new_terrain := data.get_terrain()
 	sprite_terrain.z_index = 0
 	sprite_terrain.modulate = Color.WHITE
-	if data.has_machine_filter():
+	if data.has_machine_filter() and data.is_special_terrain():
 		sprite_terrain.modulate = MachineData.colors[data.machine_filter]
 	
 	if old_terrain != new_terrain:
@@ -122,12 +122,13 @@ func play_terrain_dissolve(start_terrain:CellData.TerrainType, target_terrain:Ce
 	if tween_active and tween_active.is_running():
 		PuzzleTween.force_tween_completion(tween_active)
 	
+	var dur : float = 0.75 / PuzzleSettings.get_value("animation_speed")
 	var tw := get_tree().create_tween()
 	tw.tween_method(
 	  func(value:float): sprite_terrain.material.set_shader_parameter("factor", value),  
 	  0.0,  # Start value
 	  1.0,  # End value
-	  0.75     # Duration
+	  dur     # Duration
 	)
 	tween_active = tw
 	await tw.finished

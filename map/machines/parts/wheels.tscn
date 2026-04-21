@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cttgqptbqhsud"]
+
+[ext_resource type="Texture2D" uid="uid://bu68xkov817s" path="res://map/machines/digger-wheels-spritesheet.png" id="1_qixx8"]
+[ext_resource type="Script" uid="uid://s27bq0mrb1r1" path="res://map/machines/parts/wheels.gd" id="1_uanbk"]
+
+[sub_resource type="Animation" id="Animation_xcvk4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_5hv1a"]
+resource_name = "wheel_roll"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8k56c"]
+_data = {
+&"RESET": SubResource("Animation_xcvk4"),
+&"wheel_roll": SubResource("Animation_5hv1a")
+}
+
+[node name="Wheels" type="Node2D" unique_id=1892175835 node_paths=PackedStringArray("anim_player")]
+script = ExtResource("1_uanbk")
+anim_player = NodePath("AnimationPlayer")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1059108109]
+rotation = 1.5707964
+texture = ExtResource("1_qixx8")
+hframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=463846045]
+libraries/ = SubResource("AnimationLibrary_8k56c")

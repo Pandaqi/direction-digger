@@ -1,7 +1,7 @@
 extends TerrainData
 class_name TerrainEnergy
 
-var audio_positive := preload("res://generation/terrains/diamond-clink.ogg")
+var audio_positive := load("res://generation/terrains/diamond-clink.ogg")
 
 func generate(gen:PuzzleGenerator) -> void:
 	var cells_possible : Array[CellData] = []

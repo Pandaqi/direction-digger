@@ -4,14 +4,16 @@ var index : int
 var cell : CellData
 var path : Array[CellData]
 var last_treasure_number := -1
+var last_movement_vector := Vector2.RIGHT
 
-static var colors = [Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.PURPLE]
+static var colors = [Color.RED, Color.GREEN, Color.CYAN, Color.YELLOW, Color.PURPLE, Color.WHITE]
 
 signal changed()
 
 func _init(idx:int) -> void:
 	index = idx
 	path = []
+	last_movement_vector = Vector2.from_angle((randi() % 4) * 0.5 * PI)
 
 func clear_path() -> void:
 	path = []

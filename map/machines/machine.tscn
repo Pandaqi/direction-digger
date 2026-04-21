@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://d23x83jafdix7"]
 
 [ext_resource type="Script" uid="uid://bk4w5tk3awoj0" path="res://map/machines/machine.gd" id="1_yc1m4"]
-[ext_resource type="Texture2D" uid="uid://oevw5tio6o0w" path="res://icon.svg" id="2_ma0n7"]
+[ext_resource type="PackedScene" uid="uid://cttgqptbqhsud" path="res://map/machines/parts/wheels.tscn" id="2_8deq7"]
+[ext_resource type="Texture2D" uid="uid://c11u5yxouuiug" path="res://map/machines/digger-body.png" id="2_yobmb"]
 [ext_resource type="AudioStream" uid="uid://b8hg265ojc52a" path="res://map/machines/audio/digging-1.ogg" id="3_iwv4m"]
+[ext_resource type="PackedScene" uid="uid://dx3mlt8urlrhq" path="res://map/machines/parts/drill.tscn" id="3_xcvk4"]
 [ext_resource type="AudioStream" uid="uid://4at2nbuvqc2y" path="res://map/machines/audio/digging-2.ogg" id="4_yobmb"]
 [ext_resource type="AudioStream" uid="uid://js1bacgl3j5s" path="res://map/machines/audio/digging-3.ogg" id="5_8deq7"]
 [ext_resource type="AudioStream" uid="uid://dvw3ik42l5diu" path="res://map/machines/audio/digging-4.ogg" id="6_xcvk4"]
@@ -35,12 +37,72 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(0, 0)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/WheelsL:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/WheelsL:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Visuals/WheelsR:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Visuals/WheelsR:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Visuals/Drill:scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
 
 [sub_resource type="Animation" id="Animation_yobmb"]
 resource_name = "dig"
 length = 0.25
 loop_mode = 1
-step = 0.025
+step = 0.0125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -52,6 +114,117 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-8, -8), Vector2(6, 6), Vector2(8, -8), Vector2(-10, 10), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visuals/WheelsL:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.225, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-6, -109), Vector2(-6, -109), Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Visuals/WheelsL:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.012500001, 0.025, 0.225, 0.23750001, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.2, 1.2), Vector2(1, 1), Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1.001358e-05, 1.001358e-05)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Visuals/WheelsR:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.225, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-6, 109), Vector2(-6, 109), Vector2(0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Visuals/WheelsR:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.012500001, 0.025, 0.225, 0.23750001, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.2, 1.2), Vector2(1, 1), Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1.001358e-05, 1.001358e-05)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Visuals/Drill:scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.012500001, 0.025, 0.225, 0.23750001, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(2.2, 2.2), Vector2(2, 2), Vector2(2, 2), Vector2(2.2, 2.2), Vector2(1.001358e-05, 1.001358e-05)]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Visuals/WheelsL")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"start_anim"
+}, {
+"args": [],
+"method": &"stop_anim"
+}]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Visuals/WheelsR")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"start_anim"
+}, {
+"args": [],
+"method": &"stop_anim"
+}]
+}
+tracks/8/type = "method"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Visuals/Drill")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"start_anim"
+}, {
+"args": [],
+"method": &"stop_anim"
+}]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8deq7"]
@@ -76,15 +249,25 @@ point_count = 2
 [node name="Machine" type="Node2D" unique_id=378872610 node_paths=PackedStringArray("visuals", "sprite", "anim_player", "audio_digging", "particles_digging")]
 script = ExtResource("1_yc1m4")
 visuals = NodePath("Visuals")
-sprite = NodePath("Visuals/Sprite2D")
+sprite = NodePath("Visuals/Body")
 anim_player = NodePath("AnimationPlayer")
 audio_digging = NodePath("AudioDigging")
 particles_digging = NodePath("ParticlesDigging")
 
 [node name="Visuals" type="Node2D" parent="." unique_id=1604246742]
 
-[node name="Sprite2D" type="Sprite2D" parent="Visuals" unique_id=1220706974]
-texture = ExtResource("2_ma0n7")
+[node name="WheelsL" parent="Visuals" unique_id=1892175835 instance=ExtResource("2_8deq7")]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="WheelsR" parent="Visuals" unique_id=27303379 instance=ExtResource("2_8deq7")]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Drill" parent="Visuals" unique_id=1894654917 instance=ExtResource("3_xcvk4")]
+position = Vector2(119, 0)
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Body" type="Sprite2D" parent="Visuals" unique_id=1220706974]
+texture = ExtResource("2_yobmb")
 
 [node name="AudioDigging" type="AudioStreamPlayer2D" parent="." unique_id=1755366343]
 stream = SubResource("AudioStreamRandomizer_l3p15")

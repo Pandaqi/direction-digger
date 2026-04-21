@@ -2,7 +2,7 @@ extends PuzzleCommand
 class_name CommandWearDown
 
 var cell : CellData
-var audio_stream : AudioStream = preload("res://puzzle-framework/game/sfx/windup_stretch.ogg")
+var audio_stream : AudioStream = load("res://puzzle-framework/game/sfx/windup_stretch.ogg")
 
 func _init(c:CellData):
 	cell = c

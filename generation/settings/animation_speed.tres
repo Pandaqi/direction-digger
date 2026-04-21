@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PuzzleSettingSlider" format=3 uid="uid://dsfny6dunrcy6"]
+
+[ext_resource type="Script" uid="uid://bveqd8k261myk" path="res://puzzle-framework/settings/setting_slider.gd" id="1_2xve3"]
+
+[resource]
+script = ExtResource("1_2xve3")
+min_value = 0.1
+max_value = 3.0
+step_size = 0.1
+feedback_rounded = false
+key = "animation_speed"
+label = "Animation Speed"
+default = 1.0
+tooltip = "How quickly things move, animate, and update."
+metadata/_custom_type_script = "uid://bveqd8k261myk"
